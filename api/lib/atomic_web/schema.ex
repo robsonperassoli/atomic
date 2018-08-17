@@ -3,10 +3,16 @@ defmodule AtomicWeb.Schema do
 
 
   alias AtomicWeb.ProjectManagementResolver
+  alias AtomicWeb.AccountsResolver
 
   object :project do
     field :id, non_null(:id)
     field :name, non_null(:string)
+  end
+
+  object :user do
+    field :name, non_null(:string)
+    field :email, non_null(:string)
   end
 
   query do
@@ -27,6 +33,13 @@ defmodule AtomicWeb.Schema do
       arg :name, non_null(:string)
 
       resolve &ProjectManagementResolver.update_project/3
+    end
+
+    field :register_user, :user do
+      arg :name, non_null(:string)
+      arg :email, non_null(:string)
+
+      resolve &AccountsResolver.register_user/3
     end
   end
 end
