@@ -5,7 +5,13 @@ defmodule AtomicWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", AtomicWeb do
+  scope "/", AtomicWeb do
     pipe_through :api
+    
+  end
+
+  scope "/graphql" do
+    forward "/", Absinthe.Plug,
+      schema: AtomicWeb.Schema
   end
 end
