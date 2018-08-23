@@ -7,6 +7,7 @@ defmodule Atomic.ProjectManagement do
   alias Atomic.Repo
 
   alias Atomic.ProjectManagement.Project
+  alias Atomic.Accounts.User
 
   @doc """
   Returns the list of projects.
@@ -19,6 +20,11 @@ defmodule Atomic.ProjectManagement do
   """
   def list_projects do
     Repo.all(Project)
+  end
+
+  def user_projects(user) do
+    %User{projects: projects} = Repo.preload(user, :projects)    
+    projects
   end
 
   @doc """
@@ -36,6 +42,8 @@ defmodule Atomic.ProjectManagement do
 
   """
   def get_project!(id), do: Repo.get!(Project, id)
+  
+  def get_user_project!(user_id, id), do: Repo.get_by!(Project, id: id, user_id: user_id)
 
   @doc """
   Creates a project.

@@ -2,12 +2,12 @@ defmodule Atomic.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "users" do
     field :email, :string
     field :name, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    has_many :projects, Atomic.ProjectManagement.Project
 
     timestamps()
   end

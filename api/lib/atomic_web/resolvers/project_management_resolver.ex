@@ -1,13 +1,18 @@
 defmodule AtomicWeb.ProjectManagementResolver do
   alias Atomic.ProjectManagement
 
-  def list_projects(_root, _args, _info) do
-    projects = ProjectManagement.list_projects
+  def list_projects(_root, _args, %{context: %{current_user: user}}) do
+    projects = ProjectManagement.user_projects(user)
     {:ok, projects}
   end
 
-  def create_project(_root, args, _info) do
-    case ProjectManagement.create_project(args) do
+  def list_projects(_root, _args, _info), do: {:error, "Authentication required"}
+
+  def create_project(_root, args, %{context: %{current_user: user}}) do
+    project_args = args
+    |> Map.put(:user_id, user.id)
+
+    case ProjectManagement.create_project(project_args) do
       {:ok, project} ->
         {:ok, project}
       _error ->
@@ -15,9 +20,11 @@ defmodule AtomicWeb.ProjectManagementResolver do
     end
   end
 
-  def update_project(_root, args, _info) do
+  def create_project(_root, _args, _info), do: {:error, "Authentication required"}
+
+  def update_project(_root, args, %{context: %{current_user: user}}) do
     %{ :id => id } = args
-    project = ProjectManagement.get_project!(id)
+    project = ProjectManagement.get_user_project!(user.id, id)
     case ProjectManagement.update_project(project, args) do
       {:ok, project} ->
         {:ok, project}
@@ -25,4 +32,6 @@ defmodule AtomicWeb.ProjectManagementResolver do
         {:error, "Could not update project"}
     end
   end
+
+  def update_project(_root, _args, _info), do: {:error, "Authentication required"}
 end
