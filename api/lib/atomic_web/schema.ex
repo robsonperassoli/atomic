@@ -15,6 +15,10 @@ defmodule AtomicWeb.Schema do
     field :email, non_null(:string)
   end
 
+  object :session do
+    field :token, non_null(:string)
+  end
+
   query do
     field :projects, non_null(list_of(non_null(:project))) do
       resolve &ProjectManagementResolver.list_projects/3
@@ -38,8 +42,16 @@ defmodule AtomicWeb.Schema do
     field :register_user, :user do
       arg :name, non_null(:string)
       arg :email, non_null(:string)
+      arg :password, non_null(:string)
 
       resolve &AccountsResolver.register_user/3
+    end
+
+    field :login, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &AccountsResolver.login/3
     end
   end
 end
