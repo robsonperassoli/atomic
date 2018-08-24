@@ -9,10 +9,7 @@ defmodule AtomicWeb.ProjectManagementResolver do
   def list_projects(_root, _args, _info), do: {:error, "Authentication required"}
 
   def create_project(_root, args, %{context: %{current_user: user}}) do
-    project_args = args
-    |> Map.put(:user_id, user.id)
-
-    case ProjectManagement.create_project(project_args) do
+    case ProjectManagement.create_project(args, user) do
       {:ok, project} ->
         {:ok, project}
       _error ->
@@ -23,9 +20,7 @@ defmodule AtomicWeb.ProjectManagementResolver do
   def create_project(_root, _args, _info), do: {:error, "Authentication required"}
 
   def update_project(_root, args, %{context: %{current_user: user}}) do
-    %{ :id => id } = args
-    project = ProjectManagement.get_user_project!(user.id, id)
-    case ProjectManagement.update_project(project, args) do
+    case ProjectManagement.update_project(args, user) do
       {:ok, project} ->
         {:ok, project}
       _error ->

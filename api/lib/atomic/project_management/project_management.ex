@@ -58,9 +58,12 @@ defmodule Atomic.ProjectManagement do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project(attrs \\ %{}) do
+  def create_project(attrs \\ %{}, user) do
+    attrs_with_user = attrs
+    |> Map.put(:user_id, user.id)
+
     %Project{}
-    |> Project.changeset(attrs)
+    |> Project.changeset(attrs_with_user)
     |> Repo.insert()
   end
 
@@ -69,15 +72,15 @@ defmodule Atomic.ProjectManagement do
 
   ## Examples
 
-      iex> update_project(project, %{field: new_value})
+      iex> update_project(%{field: new_value})
       {:ok, %Project{}}
 
-      iex> update_project(project, %{field: bad_value})
+      iex> update_project(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_project(%Project{} = project, attrs) do
-    project
+  def update_project(%{:id => id} = attrs, user) do
+    get_user_project!(user.id, id)
     |> Project.changeset(attrs)
     |> Repo.update()
   end
@@ -105,17 +108,14 @@ defmodule Atomic.ProjectManagement do
 
       iex> change_project(project)
       %Ecto.Changeset{source: %Project{}}
-
   """
   def change_project(%Project{} = project) do
     Project.changeset(project, %{})
   end
 
 
-  def create_task(attrs \\ %{}, user) do
-    %{project_id: project_id} = attrs
-    
-    project = get_user_project!(user.id, project_id)
+  def create_task(%{project_id: project_id} = attrs \\ %{}, user) do
+    _project = get_user_project!(user.id, project_id)
 
     %Task{}
     |> Task.create_changeset(attrs)
