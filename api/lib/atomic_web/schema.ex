@@ -39,6 +39,12 @@ defmodule AtomicWeb.Schema do
     field :projects, non_null(list_of(non_null(:project))) do
       resolve &ProjectManagementResolver.list_projects/3
     end
+
+    field :project, non_null(:project) do
+      arg :id, non_null(:id)
+      
+      resolve &ProjectManagementResolver.get_project/3
+    end
   end
 
   mutation do

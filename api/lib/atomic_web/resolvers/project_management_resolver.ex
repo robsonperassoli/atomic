@@ -8,6 +8,13 @@ defmodule AtomicWeb.ProjectManagementResolver do
 
   def list_projects(_root, _args, _info), do: {:error, "Authentication required"}
 
+  def get_project(_root, %{id: id}, %{context: %{current_user: user}}) do
+    project = ProjectManagement.get_user_project!(user.id, id)
+    {:ok, project}
+  end
+
+  def get_project(_root, _args, _info), do: {:error, "Authentication required"}
+
   def create_project(_root, args, %{context: %{current_user: user}}) do
     case ProjectManagement.create_project(args, user) do
       {:ok, project} ->
