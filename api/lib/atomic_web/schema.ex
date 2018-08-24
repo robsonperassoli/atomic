@@ -40,9 +40,13 @@ defmodule AtomicWeb.Schema do
       resolve &ProjectManagementResolver.list_projects/3
     end
 
+    field :me, non_null(:user) do
+      resolve &AccountsResolver.me/3
+    end
+
     field :project, non_null(:project) do
       arg :id, non_null(:id)
-      
+
       resolve &ProjectManagementResolver.get_project/3
     end
   end

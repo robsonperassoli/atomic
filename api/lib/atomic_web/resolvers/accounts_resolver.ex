@@ -17,4 +17,10 @@ defmodule AtomicWeb.AccountsResolver do
       {:ok, %{token: jwt}}
     end
   end
+
+  def me(_root, _args, %{context: %{current_user: user}}) do
+    {:ok, user}
+  end
+
+  def me(_root, _args, _info), do: {:error, "Authentication Required"}
 end

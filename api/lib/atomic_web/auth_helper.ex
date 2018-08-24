@@ -19,7 +19,9 @@ defmodule AtomicWeb.AuthHelper do
 
   def get_user_by_token(token) do
     {:ok, claims} = Guardian.decode_and_verify(token)
-    user = Accounts.get_user!(String.to_integer(claims["sub"]))
+    user_id = String.to_integer(claims["sub"])
+    user = Accounts.get_user!(user_id)
+    
     {:ok, user}
   end
 end
