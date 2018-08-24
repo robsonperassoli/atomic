@@ -5,6 +5,7 @@ defmodule Atomic.ProjectManagement.Project do
   schema "projects" do
     field :name, :string
     belongs_to :user, Atomic.Accounts.User
+    has_many :tasks, Atomic.ProjectManagement.Task
 
     timestamps()
   end

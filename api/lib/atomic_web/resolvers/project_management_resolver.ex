@@ -34,4 +34,15 @@ defmodule AtomicWeb.ProjectManagementResolver do
   end
 
   def update_project(_root, _args, _info), do: {:error, "Authentication required"}
+
+  def create_task(_root, args, %{context: %{current_user: user}}) do
+    case ProjectManagement.create_task(args, user) do
+      {:ok, task} -> 
+        {:ok, task}
+      _error -> 
+        {:error, "Could not create the task"}
+    end
+  end
+
+  def create_task(_root, _args, _info), do: {:error, "Authentication Required"}
 end

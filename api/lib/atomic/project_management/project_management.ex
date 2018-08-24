@@ -7,6 +7,7 @@ defmodule Atomic.ProjectManagement do
   alias Atomic.Repo
 
   alias Atomic.ProjectManagement.Project
+  alias Atomic.ProjectManagement.Task
   alias Atomic.Accounts.User
 
   @doc """
@@ -108,5 +109,16 @@ defmodule Atomic.ProjectManagement do
   """
   def change_project(%Project{} = project) do
     Project.changeset(project, %{})
+  end
+
+
+  def create_task(attrs \\ %{}, user) do
+    %{project_id: project_id} = attrs
+    
+    project = get_user_project!(user.id, project_id)
+
+    %Task{}
+    |> Task.create_changeset(attrs)
+    |> Repo.insert()
   end
 end
