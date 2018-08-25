@@ -6,14 +6,10 @@ defmodule AtomicWeb.ProjectManagementResolver do
     {:ok, projects}
   end
 
-  def list_projects(_root, _args, _info), do: {:error, "Authentication required"}
-
   def get_project(_root, %{id: id}, %{context: %{current_user: user}}) do
     project = ProjectManagement.get_user_project!(user.id, id)
     {:ok, project}
   end
-
-  def get_project(_root, _args, _info), do: {:error, "Authentication required"}
 
   def create_project(_root, args, %{context: %{current_user: user}}) do
     case ProjectManagement.create_project(args, user) do
@@ -24,8 +20,6 @@ defmodule AtomicWeb.ProjectManagementResolver do
     end
   end
 
-  def create_project(_root, _args, _info), do: {:error, "Authentication required"}
-
   def update_project(_root, args, %{context: %{current_user: user}}) do
     case ProjectManagement.update_project(args, user) do
       {:ok, project} ->
@@ -35,8 +29,6 @@ defmodule AtomicWeb.ProjectManagementResolver do
     end
   end
 
-  def update_project(_root, _args, _info), do: {:error, "Authentication required"}
-
   def create_task(_root, args, %{context: %{current_user: user}}) do
     case ProjectManagement.create_task(args, user) do
       {:ok, task} -> 
@@ -45,6 +37,4 @@ defmodule AtomicWeb.ProjectManagementResolver do
         {:error, "Could not create the task"}
     end
   end
-
-  def create_task(_root, _args, _info), do: {:error, "Authentication Required"}
 end
