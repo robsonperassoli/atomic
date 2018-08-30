@@ -26,6 +26,12 @@ defmodule Atomic.ProjectManagement.Task do
     |> validate_required([:timer_started_at, :timer_status])
   end
 
+  def stop_changeset(task, attrs) do
+    task
+    |> cast(attrs, [:timer_stopped_at, :timer_status])
+    |> validate_required([:timer_started_at, :timer_status])
+  end
+
   def validate_task_stopped(changeset, field) do
     timer_status = get_field(changeset, field)
     case timer_status == "stopped" do

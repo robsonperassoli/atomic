@@ -85,6 +85,13 @@ defmodule AtomicWeb.Schema do
       resolve &ProjectManagementResolver.start_task/3
     end
 
+    field :stop_task, :task do
+      arg :task_id, non_null(:id)
+
+      middleware AtomicWeb.AuthMiddleware
+      resolve &ProjectManagementResolver.stop_task/3
+    end
+
     field :register_user, :user do
       arg :name, non_null(:string)
       arg :email, non_null(:string)

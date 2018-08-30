@@ -46,4 +46,13 @@ defmodule AtomicWeb.ProjectManagementResolver do
         {:error, "Error starting the task timer"}
     end
   end
+
+  def stop_task(_root, %{task_id: task_id}, %{context: %{current_user: user}}) do
+    case ProjectManagement.stop_task(task_id, user) do
+      {:ok, task} -> 
+        {:ok, task}
+      _ -> 
+        {:error, "Error stopping the task timer"}
+    end
+  end
 end

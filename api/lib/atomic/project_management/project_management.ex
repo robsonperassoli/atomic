@@ -141,4 +141,10 @@ defmodule Atomic.ProjectManagement do
     |> Task.start_changeset(%{timer_started_at: DateTime.utc_now, timer_status: "running"})
     |> Repo.update
   end
+
+  def stop_task(task_id, user) do
+    get_user_task(task_id, user.id)
+    |> Task.stop_changeset(%{timer_stopped_at: DateTime.utc_now, timer_status: "stopped"})
+    |> Repo.update
+  end
 end
