@@ -46,6 +46,20 @@ defmodule Atomic.ProjectManagement do
   
   def get_user_project!(user_id, id), do: Repo.get_by!(Project, id: id, user_id: user_id)
 
+  def get_user_task(task_id, user_id) do
+    task = Repo.get!(Task, task_id)
+    |> Repo.preload(:project)
+    
+    %Project{user_id: project_user_id} = task.project
+
+    cond do
+      project_user_id == user_id ->
+        task
+      true ->
+        nil
+    end
+  end
+
   @doc """
   Creates a project.
 
@@ -118,7 +132,13 @@ defmodule Atomic.ProjectManagement do
     _project = get_user_project!(user.id, project_id)
 
     %Task{}
-    |> Task.create_changeset(attrs)
+    |> Task.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def start_task(task_id, user) do
+    get_user_task(task_id, user.id)
+    |> Task.start_changeset(%{timer_started_at: DateTime.utc_now, timer_status: "running"})
+    |> Repo.update
   end
 end

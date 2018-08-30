@@ -21,7 +21,7 @@ defmodule AtomicWeb.Schema do
     field :description, non_null(:string)
     field :timer_started_at, :datetime
     field :timer_stopped_at, :datetime
-    field :timer_status, :task_status
+    field :timer_status, :string
     field :time, :time
     field :tags, list_of(:string)
   end
@@ -78,11 +78,18 @@ defmodule AtomicWeb.Schema do
       resolve &ProjectManagementResolver.create_task/3
     end
 
+    field :start_task, :task do
+      arg :task_id, non_null(:id)
+
+      middleware AtomicWeb.AuthMiddleware
+      resolve &ProjectManagementResolver.start_task/3
+    end
+
     field :register_user, :user do
       arg :name, non_null(:string)
       arg :email, non_null(:string)
       arg :password, non_null(:string)
-
+      
       resolve &AccountsResolver.register_user/3
     end
 

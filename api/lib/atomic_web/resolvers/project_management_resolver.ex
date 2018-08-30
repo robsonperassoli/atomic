@@ -37,4 +37,13 @@ defmodule AtomicWeb.ProjectManagementResolver do
         {:error, "Could not create the task"}
     end
   end
+
+  def start_task(_root, %{task_id: task_id}, %{context: %{current_user: user}}) do
+    case ProjectManagement.start_task(task_id, user) do
+      {:ok, task} ->
+        {:ok, task}
+      _error ->
+        {:error, "Error starting the task timer"}
+    end
+  end
 end
