@@ -22,7 +22,7 @@ defmodule AtomicWeb.Schema do
     field :timer_started_at, :datetime
     field :timer_stopped_at, :datetime
     field :timer_status, :string
-    field :time, :time
+    field :time, :integer
     field :tags, list_of(:string)
   end
 

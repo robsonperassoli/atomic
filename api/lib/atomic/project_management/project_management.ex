@@ -133,7 +133,7 @@ defmodule Atomic.ProjectManagement do
     _project = get_user_project!(user.id, project_id)
 
     %Task{}
-    |> Task.changeset(%{ attrs | timer_status: "running", timer_started_at: DateTime.utc_now, time: ~T[00:00:00]})
+    |> Task.changeset(%{ attrs | timer_status: "running", timer_started_at: DateTime.utc_now, time: 0})
     |> Repo.insert()
   end
 
@@ -145,8 +145,7 @@ defmodule Atomic.ProjectManagement do
 
   defp calculate_elapsed_time(%Task{timer_started_at: timer_started_at, time: time}) do
     elapsed_seconds = DateTime.diff(DateTime.utc_now, timer_started_at, :seconds)
-    time
-    |> Time.add(elapsed_seconds, :seconds)
+    time + elapsed_seconds
   end
 
   def stop_task(task_id, user) do

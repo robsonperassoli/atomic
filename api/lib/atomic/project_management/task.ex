@@ -7,7 +7,7 @@ defmodule Atomic.ProjectManagement.Task do
     field :timer_started_at, :utc_datetime
     field :timer_stopped_at, :utc_datetime
     field :timer_status, :string
-    field :time, :time
+    field :time, :integer
     field :tags, {:array, :string}
     belongs_to :project, Atomic.ProjectManagement.Project
 
