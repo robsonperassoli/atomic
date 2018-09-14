@@ -5,6 +5,7 @@ defmodule Atomic.ProjectManagement do
 
   import Ecto.Query, warn: false
   alias Atomic.Repo
+  alias Ecto.Changeset
 
   alias Atomic.ProjectManagement.Project
   alias Atomic.ProjectManagement.Task
@@ -132,19 +133,33 @@ defmodule Atomic.ProjectManagement do
     _project = get_user_project!(user.id, project_id)
 
     %Task{}
-    |> Task.changeset(attrs)
+    |> Task.changeset(%{ attrs | timer_status: "running", timer_started_at: DateTime.utc_now})
     |> Repo.insert()
   end
 
   def start_task(task_id, user) do
     get_user_task(task_id, user.id)
-    |> Task.start_changeset(%{timer_started_at: DateTime.utc_now, timer_status: "running"})
+    |> Task.changeset(%{timer_started_at: DateTime.utc_now, timer_status: "running"})
     |> Repo.update
   end
 
+  defp calculate_elapsed_time(%Task{timer_started_at: timer_started_at, time: nil}) do
+    elapsed_seconds = DateTime.diff(DateTime.utc_now, timer_started_at, :seconds)
+    Time.add(~T[00:00:00], elapsed_seconds, :seconds)
+  end
+
+  defp calculate_elapsed_time(%Task{timer_started_at: timer_started_at, time: time}) do
+    elapsed_seconds = DateTime.diff(DateTime.utc_now, timer_started_at, :seconds)
+    time
+    |> Time.add(elapsed_seconds, :seconds)
+  end
+
   def stop_task(task_id, user) do
-    get_user_task(task_id, user.id)
-    |> Task.stop_changeset(%{timer_stopped_at: DateTime.utc_now, timer_status: "stopped"})
+    task = get_user_task(task_id, user.id)
+
+    task
+    |> Task.changeset(%{timer_stopped_at: DateTime.utc_now, timer_status: "stopped"})
+    |> Changeset.put_change(:time, calculate_elapsed_time(task))
     |> Repo.update
   end
 end
