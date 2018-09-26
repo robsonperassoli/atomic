@@ -1,14 +1,17 @@
 import React from 'react'
 import { Redirect } from 'react-router'
+import { AuthContext } from '../../contexts/AuthContext'
 
 export default (Component) => {
-  class RequireAuth extends React.Component {
+  class RequireNotAuthenticated extends React.Component {
     render () {
-      const loggedIn = false
-      
-      return loggedIn ? <Redirect to='/' /> : <Component {...this.props} />
+      return (
+        <AuthContext.Consumer>
+          {({ loggedIn }) => loggedIn ? <Redirect to='/' /> : <Component {...this.props} />}
+        </AuthContext.Consumer>
+      )
     }
   }
 
-  return RequireAuth
+  return RequireNotAuthenticated
 }

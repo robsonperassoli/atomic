@@ -5,6 +5,7 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { AuthContext } from '../contexts/AuthContext'
 
 const LOGIN = gql`
   mutation LoginMutation($email: String!, $password: String!) {
@@ -75,14 +76,17 @@ class LoginPage extends Component {
   }
 
   async doLogin ({ email, password }) {
-    const { loginMutation } = this.props
+    const { loginMutation, userLoggedIn, history } = this.props
     
     this.setState({ showLoginError: false })
 
     try {
       const { data } = await loginMutation({ variables: { email, password } })
       const { token } = data.login
-      console.log(token)
+
+      userLoggedIn(token)
+      
+      history.push('/')
     } catch (err) {
       console.error(err)
       this.setState({ showLoginError: true })
@@ -114,4 +118,10 @@ class LoginPage extends Component {
   }
 }
 
-export default graphql(LOGIN, { name: 'loginMutation' })(LoginPage)
+const LoginPageWithMutation = graphql(LOGIN, { name: 'loginMutation' })(LoginPage)
+
+export default props => (
+  <AuthContext.Consumer>
+    {({ userLoggedIn }) => <LoginPageWithMutation {...props} userLoggedIn={userLoggedIn} />}
+  </AuthContext.Consumer>
+)
