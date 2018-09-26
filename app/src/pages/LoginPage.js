@@ -1,8 +1,18 @@
 import React, { Component } from 'react'
+import gql from 'graphql-tag'
+import { graphql } from 'react-apollo'
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+
+const LOGIN = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -12,16 +22,24 @@ const validationSchema = Yup.object().shape({
     .required('Required')
 })
 
-const renderForm = props => {
+const LoginForm = props => {
   const {
     errors,
+    touched,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    showLoginError
   } = props
 
   return (
     <Form size='large' onSubmit={handleSubmit}>
       <Segment>
+        {showLoginError && (
+          <Message negative>
+            <p>Invalid login credentials</p>
+          </Message>
+        )}
+
         <Form.Field>
           <Form.Input
             fluid
@@ -29,7 +47,7 @@ const renderForm = props => {
             iconPosition='left'
             placeholder='E-mail address'
             name='email'
-            error={!!errors.email}
+            error={!!errors.email && !!touched.email}
             onChange={handleChange}
           />
         </Form.Field>
@@ -41,7 +59,7 @@ const renderForm = props => {
           placeholder='Password'
           type='password'
           name='password'
-          error={!!errors.password}
+          error={!!errors.password && !!touched.password}
           onChange={handleChange}
         />
 
@@ -52,11 +70,27 @@ const renderForm = props => {
 }
 
 class LoginPage extends Component {
-  doLogin ({ email, password }) {
-    console.log('login with', email, password)
+  state = {
+    showLoginError: false
+  }
+
+  async doLogin ({ email, password }) {
+    const { loginMutation } = this.props
+    
+    this.setState({ showLoginError: false })
+
+    try {
+      const { data } = await loginMutation({ variables: { email, password } })
+      const { token } = data.login
+      console.log(token)
+    } catch (err) {
+      console.error(err)
+      this.setState({ showLoginError: true })
+    }
   }
 
   render () {
+    const { showLoginError } = this.state
     return (
       <div className='login-form'>
         <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
@@ -66,7 +100,7 @@ class LoginPage extends Component {
             <Formik
               initialValues={{ email: '', password: '' }}
               validationSchema={validationSchema}
-              render={renderForm}
+              render={formikProps => <LoginForm {...formikProps} showLoginError={showLoginError} />}
               onSubmit={values => this.doLogin(values)}
             />
 
@@ -80,4 +114,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage
+export default graphql(LOGIN, { name: 'loginMutation' })(LoginPage)
