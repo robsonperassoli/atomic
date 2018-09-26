@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { Switch, Route, Redirect, withRouter } from 'react-router'
+import { Switch, Route } from 'react-router'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import RegistrationPage from './pages/RegistrationPage'
 import requireAuth from './components/hocs/requireAuth'
 import requireNotAuthenticated from './components/hocs/requireNotAuthenticated'
 import './App.css'
-
 
 class App extends Component {
   render() {
@@ -22,4 +21,4 @@ class App extends Component {
   }
 }
 
-export default withRouter(App)
+export default App
