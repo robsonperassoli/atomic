@@ -35,6 +35,8 @@ defmodule AtomicWeb.Endpoint do
     key: "_atomic_key",
     signing_salt: "VIicSd5v"
 
+  plug CORSPlug
+  
   plug AtomicWeb.Router
 
   @doc """
