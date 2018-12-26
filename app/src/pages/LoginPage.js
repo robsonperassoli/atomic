@@ -5,6 +5,7 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import styled from 'styled-components'
 import { AuthContext } from '../contexts/AuthContext'
 
 const LOGIN = gql`
@@ -70,6 +71,10 @@ const LoginForm = props => {
   )
 }
 
+const LoginPageWrapper = styled.div`
+  height: 100%;
+`
+
 class LoginPage extends Component {
   state = {
     showLoginError: false
@@ -77,7 +82,7 @@ class LoginPage extends Component {
 
   async doLogin ({ email, password }) {
     const { loginMutation, userLoggedIn, history } = this.props
-    
+
     this.setState({ showLoginError: false })
 
     try {
@@ -85,7 +90,7 @@ class LoginPage extends Component {
       const { token } = data.login
 
       userLoggedIn(token)
-      
+
       history.push('/')
     } catch (err) {
       console.error(err)
@@ -96,11 +101,11 @@ class LoginPage extends Component {
   render () {
     const { showLoginError } = this.state
     return (
-      <div className='login-form'>
+      <LoginPageWrapper>
         <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as='h2' color='teal' textAlign='center'>Log-in to your account</Header>
-            
+
             <Formik
               initialValues={{ email: '', password: '' }}
               validationSchema={validationSchema}
@@ -113,7 +118,7 @@ class LoginPage extends Component {
             </Message>
           </Grid.Column>
         </Grid>
-      </div>
+      </LoginPageWrapper>
     )
   }
 }
