@@ -1,18 +1,23 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import styled from 'styled-components'
-import { AuthContext } from '../contexts/AuthContext'
 
 const LOGIN = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
     }
+  }
+`
+
+const USER_LOGGED_IN = gql`
+  mutation ($token: String!) {
+    userLoggedIn(token: $token) @client
   }
 `
 
@@ -89,7 +94,7 @@ class LoginPage extends Component {
       const { data } = await loginMutation({ variables: { email, password } })
       const { token } = data.login
 
-      userLoggedIn(token)
+      userLoggedIn({ variables: { token } })
 
       history.push('/')
     } catch (err) {
@@ -123,10 +128,11 @@ class LoginPage extends Component {
   }
 }
 
-const LoginPageWithMutation = graphql(LOGIN, { name: 'loginMutation' })(LoginPage)
+const LoginPageWithMutations = compose(
+  graphql(LOGIN, { name: 'loginMutation' }),
+  graphql(USER_LOGGED_IN, { name: 'userLoggedIn' })
+)(LoginPage)
 
 export default props => (
-  <AuthContext.Consumer>
-    {({ userLoggedIn }) => <LoginPageWithMutation {...props} userLoggedIn={userLoggedIn} />}
-  </AuthContext.Consumer>
+  <LoginPageWithMutations {...props} />
 )

@@ -1,14 +1,25 @@
 import React from 'react'
 import { Redirect } from 'react-router'
-import { AuthContext } from '../../contexts/AuthContext'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
+
+const AUTH_QUERY = gql`
+  {
+    auth @client {
+      loggedIn
+    }
+  }
+`
 
 export default (Component) => {
   class RequireNotAuthenticated extends React.Component {
     render () {
       return (
-        <AuthContext.Consumer>
-          {({ loggedIn }) => loggedIn ? <Redirect to='/' /> : <Component {...this.props} />}
-        </AuthContext.Consumer>
+        <Query query={AUTH_QUERY}>
+          {({ data: { auth } }) => {
+            return auth.loggedIn ? <Redirect to='/' /> : <Component {...this.props} />
+          }}
+        </Query>
       )
     }
   }
