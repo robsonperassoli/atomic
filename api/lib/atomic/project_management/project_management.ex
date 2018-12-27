@@ -25,7 +25,7 @@ defmodule Atomic.ProjectManagement do
   end
 
   def user_projects(user) do
-    %User{projects: projects} = Repo.preload(user, :projects)    
+    %User{projects: projects} = Repo.preload(user, :projects)
     projects
   end
 
@@ -44,13 +44,13 @@ defmodule Atomic.ProjectManagement do
 
   """
   def get_project!(id), do: Repo.get!(Project, id)
-  
+
   def get_user_project!(user_id, id), do: Repo.get_by!(Project, id: id, user_id: user_id)
 
   def get_user_task(task_id, user_id) do
     task = Repo.get!(Task, task_id)
     |> Repo.preload(:project)
-    
+
     %Project{user_id: project_user_id} = task.project
 
     cond do
@@ -129,11 +129,18 @@ defmodule Atomic.ProjectManagement do
   end
 
 
-  def create_task(%{project_id: project_id} = attrs \\ %{}, user) do
+  def create_task(attrs \\ %{}, user) do
+    %{ project_id: project_id, description: description } = attrs
     _project = get_user_project!(user.id, project_id)
 
     %Task{}
-    |> Task.changeset(%{ attrs | timer_status: "running", timer_started_at: DateTime.utc_now, time: 0})
+    |> Task.changeset(%{
+      project_id: project_id,
+      description: description,
+      timer_status: "running",
+      timer_started_at: DateTime.utc_now,
+      time: 0
+    })
     |> Repo.insert()
   end
 

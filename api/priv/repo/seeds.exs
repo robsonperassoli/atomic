@@ -10,15 +10,10 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Atomic.Accounts.User
-alias Atomic.ProjectManagement.Project
+alias Atomic.Accounts
+alias Atomic.ProjectManagement
 alias Atomic.Repo
 
-%User{name: "Robson", email: "robsonme@mydomain.com"}
-|> Repo.insert!
+{:ok, user} = Accounts.create_user(%{name: "Robson", email: "robsonme@mydomain.com", password: "123456"})
 
-%User{name: "Blast User", email: "blast@ownuser.com"}
-|> Repo.insert!
 
-%Project{name: "Atomic Development"}
-|> Repo.insert!

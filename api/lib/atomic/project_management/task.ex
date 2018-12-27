@@ -25,7 +25,7 @@ defmodule Atomic.ProjectManagement.Task do
     case timer_status == "stopped" do
       true -> changeset
       false -> add_error(changeset, field, "Timer is running")
-    end    
+    end
   end
 
   def validate_task_running(changeset, field \\ "timer_status") do
@@ -33,6 +33,6 @@ defmodule Atomic.ProjectManagement.Task do
     case timer_status == "running" do
       true -> changeset
       false -> add_error(changeset, field, "Timer is stopped")
-    end    
+    end
   end
 end
