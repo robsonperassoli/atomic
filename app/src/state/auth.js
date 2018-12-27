@@ -2,20 +2,6 @@ import * as LocalData from '../LocalData'
 
 const localySavedauthToken = LocalData.load('token')
 
-const typeDefs = `
-  type Auth {
-    loggedIn: Boolean!
-    token: String!
-  }
-  type Mutation {
-    userLoggedIn(token: String!): Auth
-  }
-  type Query {
-    auth: Auth
-  }
-`;
-
-
 const defaults = {
   auth: {
     loggedIn: !!localySavedauthToken,
@@ -45,6 +31,5 @@ export default {
     Mutation: {
       userLoggedIn
     }
-  },
-  typeDefs
+  }
 }

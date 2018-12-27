@@ -133,6 +133,4 @@ const LoginPageWithMutations = compose(
   graphql(USER_LOGGED_IN, { name: 'userLoggedIn' })
 )(LoginPage)
 
-export default props => (
-  <LoginPageWithMutations {...props} />
-)
+export default LoginPageWithMutations

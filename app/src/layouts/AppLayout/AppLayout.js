@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import { Container } from 'semantic-ui-react'
 import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
+import { graphql, Query } from 'react-apollo'
 import Header from './Header'
 
 const GET_APP_DATA = gql`
   query AppDataQuery {
+    selectedProjectId @client
     projects {
       id
       name
@@ -13,12 +14,22 @@ const GET_APP_DATA = gql`
   }
 `
 
-const AppLayout = ({ children }) => (
+const SELECT_PROJECT = gql`
+  mutation ($projectId: ID!) {
+    selectProject(projectId: $projectId) @client
+  }
+`
+
+const AppLayout = ({ children, selectProject }) => (
   <Container>
     <Query query={GET_APP_DATA}>
       {({ loading, error, data }) => loading ? null : (
         <Fragment>
-          <Header projects={data.projects} />
+          <Header
+            projects={data.projects}
+            selectedProjectId={data.selectedProjectId}
+            onProjectSelected={projectId => selectProject({ variables: { projectId } })}
+          />
           {children}
         </Fragment>
       )}
@@ -26,6 +37,6 @@ const AppLayout = ({ children }) => (
   </Container>
 )
 
+const AppLayoutWithMutation = graphql(SELECT_PROJECT, { name: 'selectProject' })(AppLayout)
 
-
-export default AppLayout
+export default AppLayoutWithMutation

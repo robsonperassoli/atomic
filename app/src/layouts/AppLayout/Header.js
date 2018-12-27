@@ -1,20 +1,25 @@
 import React from 'react'
-import {Menu, Dropdown} from 'semantic-ui-react'
+import { Menu, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
+
+const selectedProjectName = (selectedId, projects) => {
+  const selectedProject = projects.find(({ id }) => id === selectedId)
+  return selectedProject ? selectedProject.name : ''
+}
 
 const HeaderContainer = styled.div`
   margin-top: 20px;
 `
 
-const Header = ({ projects = [] }) => (
+const Header = ({ projects = [], selectedProjectId, onProjectSelected }) => (
   <HeaderContainer>
     <Menu>
       <Menu.Item header>Atomic</Menu.Item>
-      <Dropdown item text='Project One'>
+      <Dropdown item text={selectedProjectName(selectedProjectId, projects)}>
         <Dropdown.Menu>
           <Dropdown.Header>Projects</Dropdown.Header>
           {projects.map(({ name, id }) => (
-            <Dropdown.Item key={id}>{name}</Dropdown.Item>
+            <Dropdown.Item key={id} onClick={() => onProjectSelected(id)}>{name}</Dropdown.Item>
           ))}
         </Dropdown.Menu>
       </Dropdown>
