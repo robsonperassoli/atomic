@@ -37,21 +37,28 @@ const Container = styled.div`
   margin-top: 20px;
 `
 
+const ButtonBar = styled.div`
+  margin-bottom: 20px;
+`
+
 const HomePage = ({ selectedProjectId }) => {
   const [selectedDate, selectDate] = useState(new Date())
   const [modalVisible, setModalVisible] = useState(false)
   return (
     <Query query={GET_TASKS} variables={{ projectId: selectedProjectId }}>
-      {({ loading, data: { project }}) => loading ? null : (
+      {({ loading, data: { project }, refetch}) => loading ? null : (
         <Container>
-          <Button
-            onClick={() => setModalVisible(true)}
-          >
-            <Icon name='plus' /> New
-          </Button>
+          <ButtonBar>
+            <Button
+              content='New'
+              icon='add'
+              onClick={() => setModalVisible(true)}
+            />
+          </ButtonBar>
           <AddTaskModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
+            onTaskSaved={() => refetch()}
             projectId={selectedProjectId}
           />
 

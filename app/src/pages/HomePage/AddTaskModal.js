@@ -45,10 +45,11 @@ const TaskForm = (props) => {
   )
 }
 
-const AddTaskModal = ({ visible = false, onClose, projectId, createTaskMutation }) => {
+const AddTaskModal = ({ visible = false, onClose, onTaskSaved, projectId, createTaskMutation }) => {
   const createTask = async ({ projectId, description }) => {
     await createTaskMutation({ variables: { projectId, description }})
     onClose()
+    onTaskSaved()
   }
 
   return (
