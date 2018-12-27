@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Segment, Menu } from 'semantic-ui-react'
+import { Segment, Menu, Button, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
@@ -8,7 +8,8 @@ import addDays from 'date-fns/add_days'
 import format from 'date-fns/format'
 import isSameDay from 'date-fns/is_same_day'
 import { range } from 'ramda'
-import withAppLayout  from '../components/hocs/withAppLayout'
+import withAppLayout  from '../../components/hocs/withAppLayout'
+import AddTaskModal from './AddTaskModal'
 
 const getWeekDates = () => {
   const firstDayOfWeek = startOfWeek(new Date())
@@ -38,10 +39,22 @@ const Container = styled.div`
 
 const HomePage = ({ selectedProjectId }) => {
   const [selectedDate, selectDate] = useState(new Date())
+  const [modalVisible, setModalVisible] = useState(false)
   return (
     <Query query={GET_TASKS} variables={{ projectId: selectedProjectId }}>
       {({ loading, data: { project }}) => loading ? null : (
         <Container>
+          <Button
+            onClick={() => setModalVisible(true)}
+          >
+            <Icon name='plus' /> New
+          </Button>
+          <AddTaskModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            projectId={selectedProjectId}
+          />
+
           <Menu attached='top' widths={7} size='huge'>
             {getWeekDates().map(date => (
               <Menu.Item
