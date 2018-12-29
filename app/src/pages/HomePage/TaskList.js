@@ -3,6 +3,7 @@ import { Button, Icon, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
+import formatDuration from 'format-duration'
 
 const STOP_TASK = gql`
   mutation StopTask($taskId: ID!) {
@@ -26,14 +27,23 @@ const START_TASK = gql`
 
 const TaskItem = styled.div`
   display: flex;
+  align-items: center;
 `
 
 const TaskDescription = styled.div`
-  flex-grow: 10;
+  flex: 10;
+`
+
+const TaskTime = styled.div`
+  flex: 1;
+  text-align: right;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #656565;
 `
 
 const TaskActions = styled.div`
-  flex-grow: 2;
+  flex: 2;
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
@@ -50,6 +60,7 @@ const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation }) =>
     <Segment key={task.id} attached>
       <TaskItem>
         <TaskDescription>{task.description}</TaskDescription>
+        <TaskTime>{formatDuration(task.time * 1000)}</TaskTime>
         <TaskActions>
           {task.timerStatus === 'running' && (
             <Button
