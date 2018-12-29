@@ -55,8 +55,8 @@ const EditIcon = styled.div`
   font-size: 1.1em;
 `
 
-const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation }) =>
-  tasks.map(task => (
+const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation, onEditTaskClicked }) => {
+  return tasks.map(task => (
     <Segment key={task.id} attached>
       <TaskItem>
         <TaskDescription>{task.description}</TaskDescription>
@@ -77,13 +77,14 @@ const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation }) =>
               onClick={() => startTaskMutation({ variables: { taskId: task.id } })}
             />
           )}
-          <EditIcon onClick={() => console.log('clicked!!')}>
+          <EditIcon onClick={() => onEditTaskClicked(task)}>
             <Icon name='pencil' />
           </EditIcon>
         </TaskActions>
       </TaskItem>
     </Segment>
   ))
+}
 
 export default compose(
   graphql(START_TASK, { name: 'startTaskMutation' }),

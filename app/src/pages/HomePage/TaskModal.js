@@ -1,6 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import { Modal, Header, Form, Button, TextArea } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -8,6 +8,15 @@ import * as Yup from 'yup'
 const CREATE_TASK = gql`
   mutation CreateTaskMutation($projectId:ID!, $description: String!) {
     createTask(projectId: $projectId, description: $description) {
+      id
+      description
+    }
+  }
+`
+
+const UPDATE_TASK = gql`
+  mutation UpdateTaskMutation($taskId:ID!, $description: String!) {
+    updateTask(taskId: $taskId, description: $description) {
       id
       description
     }
@@ -26,6 +35,7 @@ const TaskForm = (props) => {
   const {
     errors,
     touched,
+    values,
     handleChange,
     handleSubmit
   } = props
@@ -37,6 +47,7 @@ const TaskForm = (props) => {
           control={TextArea}
           placeholder='Enter the task description'
           error={!!errors.description && !!touched.description}
+          value={values.description}
           onChange={handleChange}
         />
         </Form.Field>
@@ -45,9 +56,15 @@ const TaskForm = (props) => {
   )
 }
 
-const AddTaskModal = ({ visible = false, onClose, onTaskSaved, projectId, createTaskMutation }) => {
+const TaskModal = ({ visible = false, task, onClose, onTaskSaved, projectId, createTaskMutation, updateTaskMutation }) => {
   const createTask = async ({ projectId, description }) => {
     await createTaskMutation({ variables: { projectId, description }})
+    onClose()
+    onTaskSaved()
+  }
+
+  const updateTask = async ({ id, description }) => {
+    await updateTaskMutation({ variables: { taskId: id, description }})
     onClose()
     onTaskSaved()
   }
@@ -57,14 +74,17 @@ const AddTaskModal = ({ visible = false, onClose, onTaskSaved, projectId, create
       <Header icon='file' content='Create a task' />
       <Modal.Content>
         <Formik
-          initialValues={{ projectId, description: '' }}
+          initialValues={task ? { projectId, ...task } : { projectId, description: '' }}
           validationSchema={validationSchema}
           render={formikProps => <TaskForm {...formikProps} />}
-          onSubmit={values => createTask(values)}
+          onSubmit={values => values.id ? createTask(values) : updateTask(values)}
         />
       </Modal.Content>
     </Modal>
   )
 }
 
-export default graphql(CREATE_TASK, { name: 'createTaskMutation' })(AddTaskModal)
+export default compose(
+  graphql(CREATE_TASK, { name: 'createTaskMutation' }),
+  graphql(UPDATE_TASK, { name: 'updateTaskMutation' })
+)(TaskModal)

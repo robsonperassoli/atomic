@@ -9,7 +9,7 @@ import format from 'date-fns/format'
 import isSameDay from 'date-fns/is_same_day'
 import { range } from 'ramda'
 import withAppLayout  from '../../components/hocs/withAppLayout'
-import AddTaskModal from './AddTaskModal'
+import TaskModal from './TaskModal'
 import TaskList from "./TaskList";
 
 const getWeekDates = () => {
@@ -42,11 +42,21 @@ const ButtonBar = styled.div`
   margin-bottom: 20px;
 `
 
-
-
 const HomePage = ({ selectedProjectId }) => {
   const [selectedDate, selectDate] = useState(new Date())
   const [modalVisible, setModalVisible] = useState(false)
+  const [editingTask, setEditingTask] = useState(null)
+
+  const openEditTaskModal = (task) => {
+    setModalVisible(true)
+    setEditingTask(task)
+  }
+
+  const openAddTaskModal = () => {
+    setModalVisible(true)
+    setEditingTask(null)
+  }
+
   return (
     <Query query={GET_TASKS} variables={{ projectId: selectedProjectId }}>
       {({ loading, data: { project }, refetch}) => loading ? null : (
@@ -55,15 +65,16 @@ const HomePage = ({ selectedProjectId }) => {
             <Button
               content='New'
               icon='add'
-              onClick={() => setModalVisible(true)}
+              onClick={() => openAddTaskModal(true)}
             />
           </ButtonBar>
 
-          <AddTaskModal
+          <TaskModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
             onTaskSaved={() => refetch()}
             projectId={selectedProjectId}
+            task={editingTask}
           />
 
           <Menu attached='top' widths={7} size='huge'>
@@ -81,6 +92,7 @@ const HomePage = ({ selectedProjectId }) => {
 
           <TaskList
             tasks={project.tasks}
+            onEditTaskClicked={task => openEditTaskModal(task)}
           />
 
           <Segment attached='bottom'>3:20</Segment>
