@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Segment, Menu, Button, Icon } from 'semantic-ui-react'
+import { Segment, Menu, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
@@ -10,6 +10,7 @@ import isSameDay from 'date-fns/is_same_day'
 import { range } from 'ramda'
 import withAppLayout  from '../../components/hocs/withAppLayout'
 import AddTaskModal from './AddTaskModal'
+import TaskList from "./TaskList";
 
 const getWeekDates = () => {
   const firstDayOfWeek = startOfWeek(new Date())
@@ -41,6 +42,8 @@ const ButtonBar = styled.div`
   margin-bottom: 20px;
 `
 
+
+
 const HomePage = ({ selectedProjectId }) => {
   const [selectedDate, selectDate] = useState(new Date())
   const [modalVisible, setModalVisible] = useState(false)
@@ -55,6 +58,7 @@ const HomePage = ({ selectedProjectId }) => {
               onClick={() => setModalVisible(true)}
             />
           </ButtonBar>
+
           <AddTaskModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
@@ -75,11 +79,9 @@ const HomePage = ({ selectedProjectId }) => {
             ))}
           </Menu>
 
-          {project.tasks.map(task => (
-            <Segment key={task.id} attached>
-              {task.description}
-            </Segment>
-          ))}
+          <TaskList
+            tasks={project.tasks}
+          />
 
           <Segment attached='bottom'>3:20</Segment>
         </Container>
