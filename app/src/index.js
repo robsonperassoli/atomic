@@ -11,11 +11,12 @@ import { ApolloProvider } from 'react-apollo'
 import { withClientState } from 'apollo-link-state'
 import { load } from './LocalData'
 import stateConfigs from './state'
+import { API_URL } from './config'
 
 const cache = new InMemoryCache()
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: API_URL,
 })
 
 const authLink = setContext((_, { headers }) => {
