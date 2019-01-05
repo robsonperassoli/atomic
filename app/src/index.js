@@ -15,9 +15,7 @@ import { API_URL } from './config'
 
 const cache = new InMemoryCache()
 
-const httpLink = createHttpLink({
-  uri: API_URL,
-})
+const httpLink = createHttpLink({ uri: API_URL })
 
 const authLink = setContext((_, { headers }) => {
   const token = load('token')
