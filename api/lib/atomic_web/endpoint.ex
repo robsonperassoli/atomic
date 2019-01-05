@@ -1,7 +1,9 @@
 defmodule AtomicWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :atomic
 
-  socket "/socket", AtomicWeb.UserSocket
+  socket "/socket", AtomicWeb.UserSocket,
+    websocket: [timeout: 45_000],
+    longpool: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -36,7 +38,7 @@ defmodule AtomicWeb.Endpoint do
     signing_salt: "VIicSd5v"
 
   plug CORSPlug
-  
+
   plug AtomicWeb.Router
 
   @doc """
