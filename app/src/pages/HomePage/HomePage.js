@@ -57,17 +57,21 @@ const HomePage = ({ selectedProjectId }) => {
     setEditingTask(null)
   }
 
+  const projectSelected = !!selectedProjectId
+
   return (
     <Query query={GET_TASKS} variables={{ projectId: selectedProjectId }}>
       {({ loading, data: { project }, refetch}) => loading ? null : (
         <Container>
-          <ButtonBar>
-            <Button
-              content='New'
-              icon='add'
-              onClick={() => openAddTaskModal(true)}
-            />
-          </ButtonBar>
+          {projectSelected && (
+            <ButtonBar>
+              <Button
+                content='New'
+                icon='add'
+                onClick={() => openAddTaskModal(true)}
+              />
+            </ButtonBar>
+          )}
 
           <TaskModal
             visible={modalVisible}
@@ -90,10 +94,12 @@ const HomePage = ({ selectedProjectId }) => {
             ))}
           </Menu>
 
-          <TaskList
-            tasks={project.tasks}
-            onEditTaskClicked={task => openEditTaskModal(task)}
-          />
+          {projectSelected && (
+            <TaskList
+              tasks={project.tasks}
+              onEditTaskClicked={task => openEditTaskModal(task)}
+            />
+          )}
 
           <Segment attached='bottom'>3:20</Segment>
         </Container>

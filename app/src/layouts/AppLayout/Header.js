@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const selectedProjectName = (selectedId, projects) => {
   const selectedProject = projects.find(({ id }) => id === selectedId)
-  return selectedProject ? selectedProject.name : ''
+  return selectedProject ? selectedProject.name : 'Select a Project'
 }
 
 const HeaderContainer = styled.div`
