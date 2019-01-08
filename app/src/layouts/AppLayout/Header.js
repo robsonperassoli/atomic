@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Dropdown } from 'semantic-ui-react'
+import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const selectedProjectName = (selectedId, projects) => {
@@ -21,6 +21,9 @@ const Header = ({ projects = [], selectedProjectId, onProjectSelected }) => (
           {projects.map(({ name, id }) => (
             <Dropdown.Item key={id} onClick={() => onProjectSelected(id)}>{name}</Dropdown.Item>
           ))}
+          <Dropdown.Item key='create-project' onClick={() => null}>
+            <Icon name='plus' /> New Project
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </Menu>
