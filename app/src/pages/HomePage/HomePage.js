@@ -77,6 +77,7 @@ const HomePage = ({ selectedProjectId }) => {
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
             onTaskSaved={() => refetch()}
+            onTaskDeleted={() => refetch()}
             projectId={selectedProjectId}
             task={editingTask}
           />

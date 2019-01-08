@@ -23,6 +23,12 @@ const UPDATE_TASK = gql`
   }
 `
 
+const DELETE_TASK = gql`
+  mutation DeleteTaskMutation($taskId:ID!) {
+    deleteTask(taskId: $taskId) 
+  }
+`
+
 const validationSchema = Yup.object().shape({
   description: Yup.string()
     .min(10)
@@ -37,8 +43,10 @@ const TaskForm = (props) => {
     touched,
     values,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    onDeleteClicked
   } = props
+  const updating = values.id
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Field required>
@@ -51,12 +59,22 @@ const TaskForm = (props) => {
           onChange={handleChange}
         />
         </Form.Field>
-      <Button type='submit'>Create!</Button>
+      <Button type='submit'>{values.id ? 'Update!' : 'Create!'}</Button>
+      {updating && (
+        <Button
+          icon='trash alternate'
+          color='red'
+          content='Delete'
+          labelPosition='left'
+          onClick={() => onDeleteClicked(values.id)}
+        />
+      )}
+
     </Form>
   )
 }
 
-const TaskModal = ({ visible = false, task, onClose, onTaskSaved, projectId, createTaskMutation, updateTaskMutation }) => {
+const TaskModal = ({ visible = false, task, onClose, onTaskSaved, onTaskDeleted, projectId, createTaskMutation, updateTaskMutation, deleteTaskMutation }) => {
   const createTask = async ({ projectId, description }) => {
     await createTaskMutation({ variables: { projectId, description }})
     onClose()
@@ -69,6 +87,12 @@ const TaskModal = ({ visible = false, task, onClose, onTaskSaved, projectId, cre
     onTaskSaved()
   }
 
+  const deleteTask = async (taskId) => {
+    await deleteTaskMutation({ variables: { taskId }})
+    onClose()
+    onTaskDeleted()
+  }
+
   return (
     <Modal open={visible} onClose={onClose} closeIcon>
       <Header icon='file' content='Create a task' />
@@ -76,8 +100,13 @@ const TaskModal = ({ visible = false, task, onClose, onTaskSaved, projectId, cre
         <Formik
           initialValues={task ? { projectId, ...task } : { projectId, description: '' }}
           validationSchema={validationSchema}
-          render={formikProps => <TaskForm {...formikProps} />}
-          onSubmit={values => values.id ? createTask(values) : updateTask(values)}
+          render={formikProps => (
+            <TaskForm
+              {...formikProps}
+              onDeleteClicked={taskId => deleteTask(taskId)}
+            />
+          )}
+          onSubmit={values => values.id ? updateTask(values) : createTask(values)}
         />
       </Modal.Content>
     </Modal>
@@ -86,5 +115,6 @@ const TaskModal = ({ visible = false, task, onClose, onTaskSaved, projectId, cre
 
 export default compose(
   graphql(CREATE_TASK, { name: 'createTaskMutation' }),
-  graphql(UPDATE_TASK, { name: 'updateTaskMutation' })
+  graphql(UPDATE_TASK, { name: 'updateTaskMutation' }),
+  graphql(DELETE_TASK, { name: 'deleteTaskMutation' })
 )(TaskModal)
