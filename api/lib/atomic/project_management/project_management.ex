@@ -144,6 +144,12 @@ defmodule Atomic.ProjectManagement do
     |> Repo.insert()
   end
 
+  def update_task(%{:id => id} = attrs, user) do
+    get_user_task(id, user.id)
+    |> Task.changeset(attrs)
+    |> Repo.update
+  end
+
   def start_task(task_id, user) do
     get_user_task(task_id, user.id)
     |> Task.changeset(%{timer_started_at: DateTime.utc_now, timer_status: "running"})
@@ -162,5 +168,12 @@ defmodule Atomic.ProjectManagement do
     |> Task.changeset(%{timer_stopped_at: DateTime.utc_now, timer_status: "stopped"})
     |> Changeset.put_change(:time, calculate_elapsed_time(task))
     |> Repo.update
+  end
+
+  def delete_task(task_id, user) do
+    task = get_user_task(task_id, user.id)
+
+    task
+    |> Repo.delete
   end
 end

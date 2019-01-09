@@ -78,6 +78,21 @@ defmodule AtomicWeb.Schema do
       resolve &ProjectManagementResolver.create_task/3
     end
 
+    field :update_task, :task do
+      arg :id, non_null(:id)
+      arg :description, non_null(:string)
+
+      middleware AtomicWeb.AuthMiddleware
+      resolve &ProjectManagementResolver.update_task/3
+    end
+
+    field :delete_task, :id do
+      arg :id, non_null(:id)
+
+      middleware AtomicWeb.AuthMiddleware
+      resolve &ProjectManagementResolver.delete_task/3
+    end
+
     field :start_task, :task do
       arg :task_id, non_null(:id)
 
@@ -96,7 +111,7 @@ defmodule AtomicWeb.Schema do
       arg :name, non_null(:string)
       arg :email, non_null(:string)
       arg :password, non_null(:string)
-      
+
       resolve &AccountsResolver.register_user/3
     end
 

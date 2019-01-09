@@ -31,10 +31,28 @@ defmodule AtomicWeb.ProjectManagementResolver do
 
   def create_task(_root, args, %{context: %{current_user: user}}) do
     case ProjectManagement.create_task(args, user) do
-      {:ok, task} -> 
+      {:ok, task} ->
         {:ok, task}
-      _error -> 
+      _error ->
         {:error, "Could not create the task"}
+    end
+  end
+
+  def update_task(_root, args, %{context: %{current_user: user}}) do
+    case ProjectManagement.update_task(args, user) do
+      {:ok, task} ->
+        {:ok, task}
+      _error ->
+        {:error, "Could not update the task"}
+    end
+  end
+
+  def delete_task(_root, %{id: id}, %{context: %{current_user: user}}) do
+    case ProjectManagement.delete_task(id, user) do
+      {:ok, _} ->
+        {:ok, id}
+      _error ->
+        {:error, "Could not delete the task"}
     end
   end
 
@@ -49,9 +67,9 @@ defmodule AtomicWeb.ProjectManagementResolver do
 
   def stop_task(_root, %{task_id: task_id}, %{context: %{current_user: user}}) do
     case ProjectManagement.stop_task(task_id, user) do
-      {:ok, task} -> 
+      {:ok, task} ->
         {:ok, task}
-      _ -> 
+      _ ->
         {:error, "Error stopping the task timer"}
     end
   end
