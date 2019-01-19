@@ -16,7 +16,7 @@ const CREATE_TASK = gql`
 
 const UPDATE_TASK = gql`
   mutation UpdateTaskMutation($taskId:ID!, $description: String!) {
-    updateTask(taskId: $taskId, description: $description) {
+    updateTask(id: $taskId, description: $description) {
       id
       description
     }
@@ -25,7 +25,7 @@ const UPDATE_TASK = gql`
 
 const DELETE_TASK = gql`
   mutation DeleteTaskMutation($taskId:ID!) {
-    deleteTask(taskId: $taskId) 
+    deleteTask(id: $taskId) 
   }
 `
 
@@ -62,6 +62,7 @@ const TaskForm = (props) => {
       <Button type='submit'>{values.id ? 'Update!' : 'Create!'}</Button>
       {updating && (
         <Button
+          type='button'
           icon='trash alternate'
           color='red'
           content='Delete'

@@ -23,12 +23,13 @@ const SELECT_PROJECT = gql`
 const AppLayout = ({ children, selectProject }) => (
   <Container>
     <Query query={GET_APP_DATA}>
-      {({ loading, error, data }) => loading ? null : (
+      {({ loading, error, data, refetch }) => loading ? null : (
         <Fragment>
           <Header
             projects={data.projects}
             selectedProjectId={data.selectedProjectId}
             onProjectSelected={projectId => selectProject({ variables: { projectId } })}
+            onProjectCreated={() => refetch()}
           />
           {children}
         </Fragment>
