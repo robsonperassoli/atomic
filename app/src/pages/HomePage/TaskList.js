@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Button, Icon, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
@@ -55,35 +55,51 @@ const EditIcon = styled.div`
   font-size: 1.1em;
 `
 
+const TotalTime = styled.div`
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.4rem;
+`
+
 const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation, onEditTaskClicked }) => {
-  return tasks.map(task => (
-    <Segment key={task.id} attached>
-      <TaskItem>
-        <TaskDescription>{task.description}</TaskDescription>
-        <TaskTime>{formatDuration(task.time * 1000)}</TaskTime>
-        <TaskActions>
-          {task.timerStatus === 'running' && (
-            <Button
-              icon='clock outline'
-              content='Stop'
-              labelPosition='left'
-              onClick={() => stopTaskMutation({ variables: { taskId: task.id } })}
-            />
-          )}
-          {task.timerStatus === 'stopped' && (
-            <Button
-              content='Start'
-              color='blue'
-              onClick={() => startTaskMutation({ variables: { taskId: task.id } })}
-            />
-          )}
-          <EditIcon onClick={() => onEditTaskClicked(task)}>
-            <Icon name='pencil' />
-          </EditIcon>
-        </TaskActions>
-      </TaskItem>
-    </Segment>
-  ))
+  const totalTime = tasks.reduce((sum, task) => sum + task.time, 0)
+  return (
+    <Fragment>
+      {tasks.map(task => (
+        <Segment key={task.id} attached>
+          <TaskItem>
+            <TaskDescription>{task.description}</TaskDescription>
+            <TaskTime>{formatDuration(task.time * 1000)}</TaskTime>
+            <TaskActions>
+              {task.timerStatus === 'running' && (
+                <Button
+                  icon='clock outline'
+                  content='Stop'
+                  labelPosition='left'
+                  onClick={() => stopTaskMutation({ variables: { taskId: task.id } })}
+                />
+              )}
+              {task.timerStatus === 'stopped' && (
+                <Button
+                  content='Start'
+                  color='blue'
+                  onClick={() => startTaskMutation({ variables: { taskId: task.id } })}
+                />
+              )}
+              <EditIcon onClick={() => onEditTaskClicked(task)}>
+                <Icon name='pencil' />
+              </EditIcon>
+            </TaskActions>
+          </TaskItem>
+        </Segment>
+      ))}
+      <Segment attached='bottom'>
+        <TotalTime>
+          {formatDuration(totalTime * 1000)}
+        </TotalTime>
+      </Segment>
+    </Fragment>
+  )
 }
 
 export default compose(

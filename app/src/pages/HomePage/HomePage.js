@@ -101,8 +101,6 @@ const HomePage = ({ selectedProjectId }) => {
               onEditTaskClicked={task => openEditTaskModal(task)}
             />
           )}
-
-          <Segment attached='bottom'>3:20</Segment>
         </Container>
       )}
     </Query>
