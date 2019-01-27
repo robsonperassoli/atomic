@@ -2,7 +2,6 @@ defmodule AtomicWeb.Schema do
   use Absinthe.Schema
   use Absinthe.Ecto, repo: Atomic.Repo
 
-
   alias AtomicWeb.ProjectManagementResolver
   alias AtomicWeb.AccountsResolver
 
@@ -13,7 +12,11 @@ defmodule AtomicWeb.Schema do
   object :project do
     field :id, non_null(:id)
     field :name, non_null(:string)
-    field :tasks, list_of(:task), resolve: assoc(:tasks)
+    field :tasks, list_of(:task) do
+      arg :created_at_start, :datetime
+      arg :created_at_end, :datetime
+      resolve &ProjectManagementResolver.list_tasks/3
+    end
   end
 
   object :task do

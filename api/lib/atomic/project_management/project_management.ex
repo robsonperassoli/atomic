@@ -128,7 +128,6 @@ defmodule Atomic.ProjectManagement do
     Project.changeset(project, %{})
   end
 
-
   def create_task(attrs \\ %{}, user) do
     %{ project_id: project_id, description: description } = attrs
     _project = get_user_project!(user.id, project_id)
@@ -175,5 +174,12 @@ defmodule Atomic.ProjectManagement do
 
     task
     |> Repo.delete
+  end
+
+  def get_tasks(project_id, created_at_start, created_at_end) do
+    query = from t in Task,
+      where: t.inserted_at >= ^created_at_start and
+        t.inserted_at <= ^created_at_end
+    Repo.all(query)
   end
 end

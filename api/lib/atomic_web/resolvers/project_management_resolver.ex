@@ -6,6 +6,13 @@ defmodule AtomicWeb.ProjectManagementResolver do
     {:ok, projects}
   end
 
+  def list_tasks(%ProjectManagement.Project{id: id}, args, %{context: %{current_user: user}}) do
+    %{created_at_start: created_at_start, created_at_end: created_at_end} = args
+    project = ProjectManagement.get_user_project!(user.id, id)
+    tasks = ProjectManagement.get_tasks(project.id, created_at_start, created_at_end)
+    {:ok, tasks}
+  end
+
   def get_project(_root, %{id: id}, %{context: %{current_user: user}}) do
     project = ProjectManagement.get_user_project!(user.id, id)
     {:ok, project}

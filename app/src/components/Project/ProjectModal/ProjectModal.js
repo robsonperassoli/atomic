@@ -83,7 +83,7 @@ const ProjectModal = ({ visible = false, project, onClose, onProjectSaved, onPro
   const updateProject = async ({ id, name }) => {
     await updateProjectMutation({ variables: { id, name }})
     onClose()
-    onProjectSaved
+    onProjectSaved()
   }
 
   const deleteProject = async (id) => {

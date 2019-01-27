@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Segment, Menu, Button } from 'semantic-ui-react'
+import { Menu, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
@@ -18,10 +18,10 @@ const getWeekDates = () => {
 }
 
 const GET_TASKS = gql`
-  query GetTasks($projectId: ID!) {
+  query GetTasks($projectId: ID!, $createdAtStart: DateTime!, $createdAtEnd: DateTime!) {
     project(id: $projectId) {
       id
-      tasks {
+      tasks(createdAtStart: $createdAtStart, createdAtEnd: $createdAtEnd) {
         id
         description
         time
@@ -42,6 +42,13 @@ const ButtonBar = styled.div`
   margin-bottom: 20px;
 `
 
+const dateFilters = date => {
+  return {
+    createdAtStart: `${format(date, 'YYYY-MM-DD')}T00:00:00.001Z`,
+    createdAtEnd: `${format(date, 'YYYY-MM-DD')}T23:59:59.999Z`
+  }
+}
+
 const HomePage = ({ selectedProjectId }) => {
   const [selectedDate, selectDate] = useState(new Date())
   const [modalVisible, setModalVisible] = useState(false)
@@ -60,7 +67,7 @@ const HomePage = ({ selectedProjectId }) => {
   const projectSelected = !!selectedProjectId
 
   return (
-    <Query query={GET_TASKS} variables={{ projectId: selectedProjectId }}>
+    <Query query={GET_TASKS} variables={{ projectId: selectedProjectId, ...dateFilters(selectedDate) }}>
       {({ loading, data: { project }, refetch}) => loading ? null : (
         <Container>
           {projectSelected && (
