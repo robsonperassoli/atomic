@@ -11,7 +11,9 @@ config :atomic, AtomicWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
+  watchers: [],
+  pubsub: [name: AtomicWeb.PubSub,
+           adapter: Phoenix.PubSub.PG2]
 
 # ## SSL Support
 #

@@ -9,6 +9,13 @@ import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
 import { withClientState } from 'apollo-link-state'
+import { WebSocketLink } from 'apollo-link-ws'
+import { split } from 'apollo-link'
+import { getMainDefinition } from 'apollo-utilities'
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link'
+import * as AbsintheSocket from '@absinthe/socket'
+import {Socket as PhoenixSocket} from 'phoenix'
+import {hasSubscription} from '@jumpn/utils-graphql'
 import { load } from './LocalData'
 import stateConfigs from './state'
 import { API_URL } from './config'
@@ -17,8 +24,9 @@ const cache = new InMemoryCache()
 
 const httpLink = createHttpLink({ uri: API_URL })
 
+const token = load('token')
+
 const authLink = setContext((_, { headers }) => {
-  const token = load('token')
   return {
     headers: {
       ...headers,
@@ -27,14 +35,24 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+const wsLink = createAbsintheSocketLink(AbsintheSocket.create(
+ new PhoenixSocket('ws://localhost:4000/socket/websocket?vsn=1.0.0', { params: { token: token } }),
+))
+
 const stateLink = withClientState({
   cache,
   ...stateConfigs
 })
 
 
+const networkLink = split(
+  operation => hasSubscription(operation.query),
+  wsLink,
+  httpLink
+)
+
 const client = new ApolloClient({
-  link: stateLink.concat(authLink).concat(httpLink),
+  link: stateLink.concat(authLink).concat(networkLink),
   cache,
 })
 

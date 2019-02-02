@@ -124,5 +124,22 @@ defmodule AtomicWeb.Schema do
 
       resolve &AccountsResolver.login/3
     end
+
+    #test
+    field :update_time, :string do
+      resolve fn args, _ -> {:ok, "blá"} end
+    end
+  end
+
+  subscription do
+    field :timer_updated, :string do
+      config fn args, _ ->
+        {:ok, topic: "timer_updated"}
+      end
+
+      trigger :update_time, topic: fn comment ->
+        "timer_updated"
+      end
+    end
   end
 end

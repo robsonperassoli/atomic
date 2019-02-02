@@ -1,5 +1,7 @@
 defmodule AtomicWeb.UserSocket do
   use Phoenix.Socket
+  use Absinthe.Phoenix.Socket,
+      schema: AtomicWeb.Schema
 
   ## Channels
   # channel "room:*", AtomicWeb.RoomChannel
@@ -21,6 +23,7 @@ defmodule AtomicWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(_params, socket) do
+    IO.inspect(_params)
     {:ok, socket}
   end
 
