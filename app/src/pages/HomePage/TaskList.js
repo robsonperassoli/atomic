@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Button, Icon, Segment } from 'semantic-ui-react'
+import Timer from './Timer'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
@@ -11,6 +12,7 @@ const STOP_TASK = gql`
       id
       timerStatus
       time
+      timerStartedAt
     }
   }
 `
@@ -21,6 +23,7 @@ const START_TASK = gql`
       id
       timerStatus
       time
+      timerStartedAt
     }
   }
 `
@@ -32,14 +35,6 @@ const TaskItem = styled.div`
 
 const TaskDescription = styled.div`
   flex: 10;
-`
-
-const TaskTime = styled.div`
-  flex: 1;
-  text-align: right;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #656565;
 `
 
 const TaskActions = styled.div`
@@ -63,15 +58,16 @@ const TotalTime = styled.div`
 
 const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation, onEditTaskClicked }) => {
   const totalTime = tasks.reduce((sum, task) => sum + task.time, 0)
+  const isRunning = ({ timerStatus }) => timerStatus === 'running'
   return (
     <Fragment>
       {tasks.map(task => (
         <Segment key={task.id} attached>
           <TaskItem>
             <TaskDescription>{task.description}</TaskDescription>
-            <TaskTime>{formatDuration(task.time * 1000)}</TaskTime>
+            <Timer task={task} />
             <TaskActions>
-              {task.timerStatus === 'running' && (
+              {isRunning(task) && (
                 <Button
                   icon='clock outline'
                   content='Stop'
@@ -79,7 +75,7 @@ const TaskList = ({ tasks = [], startTaskMutation, stopTaskMutation, onEditTaskC
                   onClick={() => stopTaskMutation({ variables: { taskId: task.id } })}
                 />
               )}
-              {task.timerStatus === 'stopped' && (
+              {!isRunning(task) && (
                 <Button
                   content='Start'
                   color='blue'
