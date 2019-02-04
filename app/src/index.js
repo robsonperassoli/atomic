@@ -36,7 +36,7 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const wsLink = createAbsintheSocketLink(AbsintheSocket.create(
- new PhoenixSocket('ws://localhost:4000/socket/websocket?vsn=1.0.0', { params: { token: token } }),
+ new PhoenixSocket('ws://localhost:4000/socket', { params: { token: token } }),
 ))
 
 const stateLink = withClientState({
