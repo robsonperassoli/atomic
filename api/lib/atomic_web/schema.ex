@@ -129,36 +129,16 @@ defmodule AtomicWeb.Schema do
 
   subscription do
     field :task_updated, :task do
-      config fn args, _ ->
-        {:ok, topic: "task_updated"}
+      config fn _, %{ context: %{ current_user: current_user }} ->
+        {:ok, topic: "user:#{current_user.id}"}
       end
 
       trigger :start_task, topic: fn task ->
-        "task_updated"
+        "user:#{task.project.user_id}"
       end
 
       trigger :stop_task, topic: fn task ->
-        "task_updated"
-      end
-    end
-
-    field :task_started, :task do
-      config fn args, _ ->
-        {:ok, topic: "task_started"}
-      end
-
-      trigger :start_task, topic: fn task ->
-        "task_started"
-      end
-    end
-
-    field :task_stopped, :task do
-      config fn args, _ ->
-        {:ok, topic: "task_stopped"}
-      end
-
-      trigger :stop_task, topic: fn task ->
-        "task_stopped"
+        "user:#{task.project.user_id}"
       end
     end
   end
