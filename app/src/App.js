@@ -13,9 +13,15 @@ const AppRoot = styled.div`
   height: 100%;
 `
 
-const TIMER_SUBSCRIPTION = gql`
-  subscription TimerUpdated {
-    timerUpdated
+const TASK_SUBSCRIPTION = gql`
+  subscription TaskStartedSubscription {
+    taskUpdated {
+      id
+      description
+      time
+      timerStatus
+      timerStartedAt
+    }
   }
 `
 
@@ -24,7 +30,7 @@ const TIMER_SUBSCRIPTION = gql`
 class App extends Component {
   render() {
     return (
-      <Subscription subscription={TIMER_SUBSCRIPTION}>
+      <Subscription subscription={TASK_SUBSCRIPTION}>
         {({ data, loading, error }) => {
           console.log(data, error)
           return (

@@ -125,20 +125,40 @@ defmodule AtomicWeb.Schema do
       resolve &AccountsResolver.login/3
     end
 
-    #test
-    field :update_time, :string do
-      resolve fn args, _ -> {:ok, "blá"} end
-    end
   end
 
   subscription do
-    field :timer_updated, :string do
+    field :task_updated, :task do
       config fn args, _ ->
-        {:ok, topic: "timer_updated"}
+        {:ok, topic: "task_updated"}
       end
 
-      trigger :update_time, topic: fn comment ->
-        "timer_updated"
+      trigger :start_task, topic: fn task ->
+        "task_updated"
+      end
+
+      trigger :stop_task, topic: fn task ->
+        "task_updated"
+      end
+    end
+
+    field :task_started, :task do
+      config fn args, _ ->
+        {:ok, topic: "task_started"}
+      end
+
+      trigger :start_task, topic: fn task ->
+        "task_started"
+      end
+    end
+
+    field :task_stopped, :task do
+      config fn args, _ ->
+        {:ok, topic: "task_stopped"}
+      end
+
+      trigger :stop_task, topic: fn task ->
+        "task_stopped"
       end
     end
   end
