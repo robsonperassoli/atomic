@@ -25,7 +25,7 @@ defmodule AtomicWeb.UserSocket do
   # performing token verification on connect.
   def connect(params, socket) do
     %{"token" => token} = params
-    {:ok, user}= AuthHelper.get_user_by_token(token)
+    {:ok, user} = AuthHelper.get_user_by_token(token)
 
     socket = Absinthe.Phoenix.Socket.put_opts(socket, context: %{ current_user: user })
     {:ok, socket}
