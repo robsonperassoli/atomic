@@ -124,5 +124,22 @@ defmodule AtomicWeb.Schema do
 
       resolve &AccountsResolver.login/3
     end
+
+  end
+
+  subscription do
+    field :task_updated, :task do
+      config fn _, %{ context: %{ current_user: current_user }} ->
+        {:ok, topic: "user:#{current_user.id}"}
+      end
+
+      trigger :start_task, topic: fn task ->
+        "user:#{task.project.user_id}"
+      end
+
+      trigger :stop_task, topic: fn task ->
+        "user:#{task.project.user_id}"
+      end
+    end
   end
 end

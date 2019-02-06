@@ -1,5 +1,8 @@
 defmodule AtomicWeb.UserSocket do
   use Phoenix.Socket
+  use Absinthe.Phoenix.Socket,
+      schema: AtomicWeb.Schema
+  alias AtomicWeb.AuthHelper
 
   ## Channels
   # channel "room:*", AtomicWeb.RoomChannel
@@ -20,7 +23,11 @@ defmodule AtomicWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
+  def connect(params, socket) do
+    %{"token" => token} = params
+    {:ok, user} = AuthHelper.get_user_by_token(token)
+
+    socket = Absinthe.Phoenix.Socket.put_opts(socket, context: %{ current_user: user })
     {:ok, socket}
   end
 

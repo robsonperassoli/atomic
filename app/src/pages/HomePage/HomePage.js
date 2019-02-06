@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Menu, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
+import { Query, Subscription } from 'react-apollo'
 import startOfWeek from 'date-fns/start_of_week'
 import addDays from 'date-fns/add_days'
 import format from 'date-fns/format'
@@ -10,7 +10,7 @@ import isSameDay from 'date-fns/is_same_day'
 import { range } from 'ramda'
 import withAppLayout  from '../../components/hocs/withAppLayout'
 import TaskModal from './TaskModal'
-import TaskList from "./TaskList";
+import TaskList from './TaskList'
 
 const getWeekDates = () => {
   const firstDayOfWeek = startOfWeek(new Date())
@@ -30,6 +30,18 @@ const GET_TASKS = gql`
         timerStoppedAt
         tags
       }
+    }
+  }
+`
+
+const TASK_SUBSCRIPTION = gql`
+  subscription TaskUpdatedSubscription {
+    taskUpdated {
+      id
+      description
+      time
+      timerStatus
+      timerStartedAt
     }
   }
 `
@@ -67,50 +79,54 @@ const HomePage = ({ selectedProjectId }) => {
   const projectSelected = !!selectedProjectId
 
   return (
-    <Query query={GET_TASKS} variables={{ projectId: selectedProjectId, ...dateFilters(selectedDate) }}>
-      {({ loading, data: { project }, refetch}) => loading ? null : (
-        <Container>
-          {projectSelected && (
-            <ButtonBar>
-              <Button
-                content='New'
-                icon='add'
-                onClick={() => openAddTaskModal(true)}
+    <Subscription subscription={TASK_SUBSCRIPTION}>
+      {() => (
+        <Query query={GET_TASKS} variables={{ projectId: selectedProjectId, ...dateFilters(selectedDate) }}>
+          {({ loading, data: { project }, refetch}) => loading ? null : (
+            <Container>
+              {projectSelected && (
+                <ButtonBar>
+                  <Button
+                    content='New'
+                    icon='add'
+                    onClick={() => openAddTaskModal(true)}
+                  />
+                </ButtonBar>
+              )}
+
+              <TaskModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onTaskSaved={() => refetch()}
+                onTaskDeleted={() => refetch()}
+                projectId={selectedProjectId}
+                task={editingTask}
               />
-            </ButtonBar>
+
+              <Menu attached='top' widths={7} size='huge'>
+                {getWeekDates().map(date => (
+                  <Menu.Item
+                    key={date.toString()}
+                    name={date.toString()}
+                    active={isSameDay(date, selectedDate)}
+                    onClick={() => selectDate(date)}
+                  >
+                    {format(date, 'ddd')}
+                  </Menu.Item>
+                ))}
+              </Menu>
+
+              {projectSelected && (
+                <TaskList
+                  tasks={project.tasks}
+                  onEditTaskClicked={task => openEditTaskModal(task)}
+                />
+              )}
+            </Container>
           )}
-
-          <TaskModal
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            onTaskSaved={() => refetch()}
-            onTaskDeleted={() => refetch()}
-            projectId={selectedProjectId}
-            task={editingTask}
-          />
-
-          <Menu attached='top' widths={7} size='huge'>
-            {getWeekDates().map(date => (
-              <Menu.Item
-                key={date.toString()}
-                name={date.toString()}
-                active={isSameDay(date, selectedDate)}
-                onClick={() => selectDate(date)}
-              >
-                {format(date, 'ddd')}
-              </Menu.Item>
-            ))}
-          </Menu>
-
-          {projectSelected && (
-            <TaskList
-              tasks={project.tasks}
-              onEditTaskClicked={task => openEditTaskModal(task)}
-            />
-          )}
-        </Container>
+        </Query>
       )}
-    </Query>
+    </Subscription>
   )
 }
 
