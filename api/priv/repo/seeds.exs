@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Atomic.Accounts
+alias Atomic.ProjectManagement
+alias Atomic.Repo
+
+{:ok, _user} = Accounts.create_user(%{name: "Robson", email: "robsonme@mydomain.com", password: "123456"})
