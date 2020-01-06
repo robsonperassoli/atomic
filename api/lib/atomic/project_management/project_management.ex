@@ -179,7 +179,8 @@ defmodule Atomic.ProjectManagement do
   def get_tasks(project_id, created_at_start, created_at_end) do
     query = from t in Task,
       where: t.inserted_at >= ^created_at_start and
-        t.inserted_at <= ^created_at_end
+        t.inserted_at <= ^created_at_end and
+        t.project_id == ^project_id
     Repo.all(query)
   end
 end
