@@ -11,9 +11,10 @@ defmodule Atomic.Application do
       # Start the Ecto repository
       Atomic.Repo,
       # Start the endpoint when the application starts
-      AtomicWeb.Endpoint
+      AtomicWeb.Endpoint,
       # Starts a worker by calling: Atomic.Worker.start_link(arg)
       # {Atomic.Worker, arg},
+      {Absinthe.Subscription, [AtomicWeb.Endpoint]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,5 +1,6 @@
 defmodule AtomicWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :atomic
+  use Absinthe.Phoenix.Endpoint
 
   socket "/socket", AtomicWeb.UserSocket,
     websocket: true,
