@@ -41,5 +41,7 @@ defmodule AtomicWeb.Endpoint do
     key: "_atomic_key",
     signing_salt: "8YcfoavZ"
 
+  plug CORSPlug
+
   plug AtomicWeb.Router
 end
