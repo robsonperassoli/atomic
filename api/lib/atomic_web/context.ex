@@ -3,16 +3,15 @@ defmodule AtomicWeb.Context do
 
   import Plug.Conn
 
-  alias Atomic.Accounts
   alias AtomicWeb.AuthHelper
 
   def init(opts), do: opts
 
   def call(conn, _) do
     case build_context(conn) do
-      {:ok, context} -> 
+      {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
-      _ -> 
+      _ ->
         conn
     end
   end
