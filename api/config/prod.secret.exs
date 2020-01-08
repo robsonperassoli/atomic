@@ -25,6 +25,7 @@ secret_key_base =
 
 config :atomic, AtomicWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
+  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 80],
   secret_key_base: secret_key_base
 
 # ## Using releases (Elixir v1.9+)
