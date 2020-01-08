@@ -43,7 +43,7 @@
     "graphql-tag": "^2.9.2",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
-    "lodash.merge": "^4.6.1",
+    "lodash.merge": "^4.6.2",
     "object-assign": "4.1.1",
     "phoenix": "^1.4.0",
     "postcss-flexbugs-fixes": "3.2.0",
