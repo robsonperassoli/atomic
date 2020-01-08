@@ -1,3 +1,3 @@
 #!/bin/sh
-git subtree push --prefix api heroku master
+git subtree push --prefix api gigalixir master
 

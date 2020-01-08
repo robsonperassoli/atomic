@@ -14,6 +14,4 @@ alias Atomic.Accounts
 alias Atomic.ProjectManagement
 alias Atomic.Repo
 
-{:ok, user} = Accounts.create_user(%{name: "Robson", email: "robsonme@mydomain.com", password: "123456"})
-
-
+{:ok, _user} = Accounts.create_user(%{name: "Robson", email: "robsonme@mydomain.com", password: "123456"})

@@ -3,15 +3,14 @@ defmodule AtomicWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    
   end
 
   pipeline :graphql do
     plug AtomicWeb.Context
   end
 
-  scope "/", AtomicWeb do
-    pipe_through :api    
+  scope "/api", AtomicWeb do
+    pipe_through :api
   end
 
   scope "/graphql" do
@@ -19,4 +18,7 @@ defmodule AtomicWeb.Router do
     forward "/", Absinthe.Plug,
       schema: AtomicWeb.Schema
   end
+
+  forward "/graphiql", Absinthe.Plug.GraphiQL,
+    schema: AtomicWeb.Schema
 end
