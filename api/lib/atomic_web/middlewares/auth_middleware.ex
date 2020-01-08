@@ -5,7 +5,7 @@ defmodule AtomicWeb.AuthMiddleware do
     case resolution.context do
       %{current_user: _} ->
         resolution
-      _ -> 
+      _ ->
         Absinthe.Resolution.put_result(
           resolution,
           {:error, "Unauthorized"}

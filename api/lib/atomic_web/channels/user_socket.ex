@@ -1,17 +1,14 @@
 defmodule AtomicWeb.UserSocket do
   use Phoenix.Socket
   use Absinthe.Phoenix.Socket,
-      schema: AtomicWeb.Schema
+    schema: AtomicWeb.Schema
+
   alias AtomicWeb.AuthHelper
+
+  transport :websocket, Phoenix.Transports.WebSocket
 
   ## Channels
   # channel "room:*", AtomicWeb.RoomChannel
-
-  ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket,
-    timeout: 45_000,
-    check_origin: ["https://atomic-time.netlify.com"]
-  # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -25,10 +22,11 @@ defmodule AtomicWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket) do
+    IO.inspect params
     %{"token" => token} = params
     {:ok, user} = AuthHelper.get_user_by_token(token)
 
-    socket = Absinthe.Phoenix.Socket.put_opts(socket, context: %{ current_user: user })
+    socket = Absinthe.Phoenix.Socket.put_options(socket, context: %{ current_user: user })
     {:ok, socket}
   end
 

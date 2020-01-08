@@ -1,6 +1,5 @@
 defmodule AtomicWeb.Schema do
   use Absinthe.Schema
-  use Absinthe.Ecto, repo: Atomic.Repo
 
   alias AtomicWeb.ProjectManagementResolver
   alias AtomicWeb.AccountsResolver
