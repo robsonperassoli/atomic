@@ -1,7 +1,16 @@
 import React from 'react'
 import { useFormik } from 'formik'
+import { useMutation, gql } from '@apollo/client'
 import { Box, Button, FormField, TextInput } from 'grommet'
 import * as Yup from 'yup'
+
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -12,9 +21,14 @@ const validationSchema = Yup.object().shape({
 })
 
 const initialValues = { email: '', password: '' }
-const onSubmit = values => console.log(values)
 
 function Login() {
+  const [doLogin] = useMutation(LOGIN_MUTATION)
+  const onSubmit = async values => {
+    const { data } = await doLogin({ variables: values })
+    const { login: { token } } = data
+    console.log(token)
+  }
   const form = useFormik({ initialValues, onSubmit, validationSchema })
 
   return (
