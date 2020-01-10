@@ -12,6 +12,12 @@ const LOGIN_MUTATION = gql`
   }
 `
 
+const AUTH_MUTATION = gql`
+  mutation AuthMutation($token: String!) {
+    authenticate(token: $token) @client
+  }
+`
+
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address')
@@ -22,12 +28,14 @@ const validationSchema = Yup.object().shape({
 
 const initialValues = { email: '', password: '' }
 
-function Login() {
+function Login({ history }) {
   const [doLogin] = useMutation(LOGIN_MUTATION)
+  const [authenticate] = useMutation(AUTH_MUTATION)
   const onSubmit = async values => {
     const { data } = await doLogin({ variables: values })
     const { login: { token } } = data
-    console.log(token)
+    await authenticate({ variables: { token }})
+    history.replace('/')
   }
   const form = useFormik({ initialValues, onSubmit, validationSchema })
 
