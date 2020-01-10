@@ -31,12 +31,14 @@ const initialValues = { email: '', password: '' }
 function Login({ history }) {
   const [doLogin] = useMutation(LOGIN_MUTATION)
   const [authenticate] = useMutation(AUTH_MUTATION)
+
   const onSubmit = async values => {
     const { data } = await doLogin({ variables: values })
     const { login: { token } } = data
     await authenticate({ variables: { token }})
     history.replace('/')
   }
+
   const form = useFormik({ initialValues, onSubmit, validationSchema })
 
   return (

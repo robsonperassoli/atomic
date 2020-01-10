@@ -1,7 +1,8 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Grommet } from 'grommet'
-import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client'
+import { setContext } from 'apollo-link-context'
 import theme from './theme'
 import resolvers, { initialState } from './state'
 import requireAuth from './helpers/requireAuth'
@@ -12,10 +13,22 @@ import Register from './pages/Register'
 
 const cache = new InMemoryCache()
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000/graphql',
+})
+
+const authLink = setContext((_, { headers }) => {
+  const { token } = initialState.data
+  return {
+    headers: {
+      ...headers,
+      'Authorization': token ? `Bearer ${token}` : ''
+    }
+  }
+})
+
 const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'http://localhost:4000/graphql',
-  }),
+  link: authLink.concat(httpLink),
   cache,
   resolvers
 })

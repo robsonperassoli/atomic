@@ -2,15 +2,17 @@ import React from 'react'
 import { Text } from 'grommet'
 import { useQuery, gql } from '@apollo/client'
 
-const APP_QUERY = gql`
+const PROJECTS = gql`
   {
-    token @client
-    authenticated @client
+    me {
+      email
+    }
   }
 `
 
 function Home() {
-  const { data } = useQuery(APP_QUERY)
+  const { data } = useQuery(PROJECTS)
+  console.log(data)
   return (
     <Text>Home</Text>
   )
