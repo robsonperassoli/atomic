@@ -8,7 +8,7 @@ import resolvers, { initialState } from './state'
 import requireAuth from './helpers/requireAuth'
 import requireNotAuthenticated from './helpers/requireNotAuthenticated'
 import Login from './pages/Login'
-import Home from './pages/Home'
+import Home from './pages/Home/Home'
 import Register from './pages/Register'
 
 const cache = new InMemoryCache()
