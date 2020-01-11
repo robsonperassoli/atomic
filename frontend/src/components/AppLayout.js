@@ -31,7 +31,7 @@ function AppLayout({ children }) {
   const selectedProject = projects.find(p => p.id === selectedProjectId)
   return (
     <>
-      <Header background='brand'>
+      <Header background='brand' pad='xsmall'>
         <Text>Atomic</Text>
         <Menu
           label={selectedProject ? selectedProject.name : 'Select a project'}

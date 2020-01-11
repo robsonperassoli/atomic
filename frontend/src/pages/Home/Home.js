@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Text, Box } from 'grommet'
+import { Text, Box, Tabs, Tab } from 'grommet'
 import { useQuery, gql } from '@apollo/client'
 import { DateTime } from 'luxon'
 import AppLayout from '../../components/AppLayout'
+import Container from '../../components/Container'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import TaskList from './TaskList'
 
@@ -33,16 +34,35 @@ function Home() {
   const dates = weekDates()
   return (
     <AppLayout>
-      <Box direction='row'>
-        {dates.map(date => (
-          <Text key={date.toISO()} onClick={() => setSelectedDate(date)}>{date.toFormat('EEE')}</Text>
-        ))}
-      </Box>
-      {selectedProjectId ? (
-        <TaskList projectId={selectedProjectId} date={selectedDate} />
-      ) : (
-        <NoProjectSelected />
-      )}
+      <Container>
+        <Box
+          direction='row'
+          fill='horizontal'
+          justify='between'
+          border='all'
+          round='xsmall'
+          margin={{ vertical: 'medium' }}
+        >
+          {dates.map((date, i) => (
+            <Box
+              pad='small'
+              border={i !== dates.length - 1 ? 'right' : null}
+              fill
+              align='center'
+              onClick={() => setSelectedDate(date)}
+              background={date.hasSame(selectedDate, 'day') ? 'light-2' : null}
+              key={date.toISO()}
+            >
+              {date.toFormat('EEE')}
+            </Box>
+          ))}
+        </Box>
+        {selectedProjectId ? (
+          <TaskList projectId={selectedProjectId} date={selectedDate} />
+        ) : (
+          <NoProjectSelected />
+        )}
+      </Container>
     </AppLayout>
   )
 }

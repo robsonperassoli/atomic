@@ -27,6 +27,10 @@ function TaskList({ projectId, date }) {
 
   const { project } = data
 
+  if (!loading && project.tasks.length === 0) {
+    return (<Box pad='medium' align='center'>Task list is empty :)</Box>)
+  }
+
   return (
     <Box>
       {project.tasks.map(task => (
