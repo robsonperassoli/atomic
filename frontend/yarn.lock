@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@apollo/client@^3.0.0-beta.19":
-  version "3.0.0-beta.19"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.19.tgz#dfe35cb8d144039359a4a2e9af516be671e8b995"
-  integrity sha512-5yDOAlMAu2QYb0M7JDv2Y1Ho5XGMJVDYaiMmpz+u0kL1bhDB2X9VjsbmUvLEvr315kV+LdQc+qxs7VCCAmuHIg==
+"@apollo/client@^3.0.0-beta.23":
+  version "3.0.0-beta.23"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.23.tgz#0caae9b4f71fe381760484d9e8995ee8c5fca470"
+  integrity sha512-/2yIsy2Zd+KxPJyruBf1zDes4haxNqPZPuuNyCiCXS7s3bBSCrIqfkwHYfrMS9cLsweCYJrgr3JsdQIWHZZKkg==
   dependencies:
     "@types/zen-observable" "^0.8.0"
     "@wry/equality" "^0.1.9"
@@ -1677,6 +1677,11 @@ acorn@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
   integrity sha512-kL5CuoXA/dgxlBbVrflsflzQ3PAas7RYZB52NOm/6839iVYJgKMJ3cQJD+t2i5+qFa8h3MDpEOJiS64E8JLnSQ==
+
+add-zero@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/add-zero/-/add-zero-1.0.0.tgz#88e221696717f66db467672f3f9aa004de9f1a2c"
+  integrity sha1-iOIhaWcX9m20Z2cvP5qgBN6fGiw=
 
 address@1.1.2, address@^1.0.1:
   version "1.1.2"
@@ -4485,6 +4490,14 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
+
+format-duration@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/format-duration/-/format-duration-1.3.1.tgz#9fe804a9ead0c6c4392c9088d08349566afc7c0f"
+  integrity sha512-InBzMSDTKroKvjPO1p6MPhj6ULYEkKuhblIyjFm9YjeuZA5ePoknwVebMHOlQdkOfn0SwGbXzq+FL5p9RyIlag==
+  dependencies:
+    add-zero "^1.0.0"
+    parse-ms "^1.0.1"
 
 formik@^2.1.1:
   version "2.1.1"
@@ -7526,6 +7539,11 @@ parse-json@^5.0.0:
     error-ex "^1.3.1"
     json-parse-better-errors "^1.0.1"
     lines-and-columns "^1.1.6"
+
+parse-ms@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-1.0.1.tgz#56346d4749d78f23430ca0c713850aef91aa361d"
+  integrity sha1-VjRtR0nXjyNDDKDHE4UK75GqNh0=
 
 parse5@4.0.0:
   version "4.0.0"

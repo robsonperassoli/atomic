@@ -1,40 +1,47 @@
 import React from 'react'
-import { useQuery, gql } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import { Box } from 'grommet'
+import Task from './Task'
 
-const TASKS_QUERY = gql`
-  query TasksQuery($projectId: ID!, $createdAtStart: DateTime!, $createdAtEnd: DateTime!) {
-    project(id: $projectId) {
+const STOP_TASK = gql`
+  mutation StopTask($taskId: ID!) {
+    stopTask(taskId: $taskId) {
       id
-      name
-      tasks (createdAtStart: $createdAtStart, createdAtEnd: $createdAtEnd) {
-        id
-        description
-      }
+      timerStatus
+      time
+      timerStartedAt
     }
   }
 `
 
-
-function TaskList({ projectId, date }) {
-  const { data, loading } = useQuery(TASKS_QUERY, {
-    variables: { projectId, createdAtStart: date.startOf('day').toUTC(), createdAtEnd: date.endOf('day').toUTC() }
-  })
-
-  if (loading) {
-    return 'Loading'
+const START_TASK = gql`
+  mutation StartTask($taskId: ID!) {
+    startTask(taskId: $taskId) {
+      id
+      timerStatus
+      time
+      timerStartedAt
+    }
   }
+`
 
-  const { project } = data
-
-  if (!loading && project.tasks.length === 0) {
+function TaskList({ tasks, onTaskEdit }) {
+  const [startTask] = useMutation(START_TASK)
+  const [stopTask] = useMutation(STOP_TASK)
+  if (tasks.length === 0) {
     return (<Box pad='medium' align='center'>Task list is empty :)</Box>)
   }
 
   return (
     <Box>
-      {project.tasks.map(task => (
-        <Box key={task.id}>{task.description}</Box>
+      {tasks.map(task => (
+        <Task
+          key={task.id}
+          task={task}
+          onTaskStart={() => startTask({ variables: { taskId: task.id } })}
+          onTaskStop={() => stopTask({ variables: { taskId: task.id } })}
+          onEditClicked={() => onTaskEdit(task)}
+        />
       ))}
     </Box>
   )
