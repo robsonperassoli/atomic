@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Header, Text, Menu } from 'grommet'
 import { Add } from 'grommet-icons'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import useSelectedProjectId from '../hooks/useSelectedProjectId'
+import ProjectModal from './ProjectModal'
 
 const APP_QUERY = gql`
   {
@@ -19,13 +20,23 @@ const SELECT_PROJECT_MUTATION = gql`
   }
 `
 
+const modalClosed = { visible: false, props: {} }
+
 function AppLayout({ children }) {
-  const { data = {} } = useQuery(APP_QUERY)
+  const { data = {}, refetch } = useQuery(APP_QUERY)
   const [selectProject] = useMutation(SELECT_PROJECT_MUTATION)
   const selectedProjectId = useSelectedProjectId()
+  const [projectModal, setProjectModal] = useState(modalClosed)
 
   const onSelectProject = projectId => () => selectProject({ variables: { projectId } })
   const createItem = ({ id, name }) => ({ label: name, onClick: onSelectProject(id) })
+
+  const onProjectSaved = async ({ isNew, id: projectId }) => {
+    await refetch()
+    if(isNew) {
+      selectProject({ variables: { projectId }})
+    }
+  }
 
   const projects = data.projects || []
   const selectedProject = projects.find(p => p.id === selectedProjectId)
@@ -44,11 +55,18 @@ function AppLayout({ children }) {
                   <Text>New Project</Text>
                 </Box>
               ),
-              onClick: () => console.log('new project')
+              onClick: () => setProjectModal({ visible: true, props: {} })
             }
           ]}
         />
       </Header>
+      {projectModal.visible && (
+        <ProjectModal
+          onProjectSaved={onProjectSaved}
+          onClose={() => setProjectModal(modalClosed)}
+          {...projectModal.props}
+        />
+      )}
       {children}
     </>
   )
