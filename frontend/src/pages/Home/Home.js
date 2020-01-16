@@ -100,6 +100,7 @@ function Home() {
         <TaskModal
           onClose={() => setTaskModal({ visible: false, props: {} })}
           onTaskSaved={() => refetch()}
+          onTaskDeleted={() => refetch()}
           {...taskModal.props}
         />
       )}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layer, Form, TextArea, Button, Box, FormField } from 'grommet'
-import { Checkmark } from 'grommet-icons'
+import { Checkmark, Trash } from 'grommet-icons'
 import { gql, useMutation } from '@apollo/client'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -48,6 +48,11 @@ function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
     onClose()
     onTaskSaved()
   }
+  const onDelete = async () => {
+    await deleteTask({ variables: { taskId: task.id } })
+    onClose()
+    onTaskDeleted()
+  }
   const form = useFormik({ initialValues: task || {}, validationSchema, onSubmit })
 
   return (
@@ -61,7 +66,24 @@ function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
             <TextArea onChange={form.handleChange} placeholder='Type the task description' rows={4} name='description' value={form.values.description} />
           </FormField>
 
-          <Button icon={<Checkmark />} type='submit' label='Save' margin={{ top: 'small' }} />
+          <Box justify='between' direction='row'>
+            {task && (
+              <Button
+                icon={<Trash />}
+                label='Delete'
+                color='status-error'
+                primary
+                margin={{ top: 'small' }}
+                onClick={onDelete}
+              />
+            )}
+            <Button
+              type='submit'
+              icon={<Checkmark />}
+              label='Save'
+              margin={{ top: 'small' }}
+            />
+          </Box>
         </Form>
       </Box>
     </Layer>

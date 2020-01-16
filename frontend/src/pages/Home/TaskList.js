@@ -1,6 +1,7 @@
 import React from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { Box } from 'grommet'
+import { Box, Text } from 'grommet'
+import formatDuration from 'format-duration'
 import Task from './Task'
 
 const STOP_TASK = gql`
@@ -28,10 +29,12 @@ const START_TASK = gql`
 function TaskList({ tasks, onTaskEdit }) {
   const [startTask] = useMutation(START_TASK)
   const [stopTask] = useMutation(STOP_TASK)
+
   if (tasks.length === 0) {
     return (<Box pad='medium' align='center'>Task list is empty :)</Box>)
   }
 
+  const totalTime = tasks.reduce((sum, task) => sum + task.time, 0)
   return (
     <Box>
       {tasks.map(task => (
@@ -43,6 +46,9 @@ function TaskList({ tasks, onTaskEdit }) {
           onEditClicked={() => onTaskEdit(task)}
         />
       ))}
+      <Box justify='end' direction='row' margin={{ vertical: 'small' }}>
+        <Text weight='bold' color='gray' size='large'>{formatDuration(totalTime * 1000)}</Text>
+      </Box>
     </Box>
   )
 }
