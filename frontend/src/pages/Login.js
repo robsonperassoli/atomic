@@ -37,6 +37,7 @@ function Login({ history }) {
     const { login: { token } } = data
     await authenticate({ variables: { token }})
     history.replace('/')
+    window.location.reload()
   }
 
   const form = useFormik({ initialValues, onSubmit, validationSchema })

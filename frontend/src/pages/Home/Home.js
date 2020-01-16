@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Text, Box, Button } from 'grommet'
 import { Add } from 'grommet-icons'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, useSubscription, gql } from '@apollo/client'
 import { DateTime } from 'luxon'
 import AppLayout from '../../components/AppLayout'
 import Container from '../../components/Container'
@@ -21,6 +21,18 @@ const TASKS_QUERY = gql`
         time
         timerStartedAt
       }
+    }
+  }
+`
+
+const TASK_SUBSCRIPTION = gql`
+  subscription TaskUpdatedSubscription {
+    taskUpdated {
+      id
+      description
+      time
+      timerStatus
+      timerStartedAt
     }
   }
 `
@@ -49,6 +61,7 @@ function Home() {
       createdAtEnd: selectedDate.endOf('day').toUTC()
     }
   })
+  const { data: _subscription } = useSubscription(TASK_SUBSCRIPTION)
 
   const dates = weekDates()
   return (
