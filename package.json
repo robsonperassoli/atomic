@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@absinthe/socket-apollo-link": "^0.2.1",
-    "phoenix": "^1.4.11"
-  }
-}
