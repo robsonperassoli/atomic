@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import { Box, Header, Text, Menu } from 'grommet'
-import { Add } from 'grommet-icons'
+import { Add, Clock } from 'grommet-icons'
 import { useQuery, useMutation, gql } from '@apollo/client'
+import styled from 'styled-components'
 import useSelectedProjectId from '../hooks/useSelectedProjectId'
 import ProjectModal from './ProjectModal'
+
+const LogoText = styled(Text)`
+  font-weight: 300;
+  font-size: 21px;
+`
 
 const APP_QUERY = gql`
   {
@@ -43,7 +49,9 @@ function AppLayout({ children }) {
   return (
     <>
       <Header background='brand' pad='xsmall'>
-        <Text>Atomic</Text>
+        <Box direction='row' gap='5px' margin={{ left: 'xsmall' }}>
+          <Clock /><LogoText>Atomic</LogoText>
+        </Box>
         <Menu
           label={selectedProject ? selectedProject.name : 'Select a project'}
           items={[
