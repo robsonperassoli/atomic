@@ -1,8 +1,9 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import { useMutation, gql } from '@apollo/client'
-import { Box, Button, FormField, TextInput } from 'grommet'
+import { Box, Button, FormField, TextInput, Heading } from 'grommet'
 import * as Yup from 'yup'
+import Link from '../components/Link'
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
@@ -44,7 +45,8 @@ function Login({ history }) {
 
   return (
     <Box fill align='center' justify='center'>
-      <form onSubmit={form.handleSubmit}>
+      <Heading level='3'>Log-in to your account</Heading>
+      <Box as='form' onSubmit={form.handleSubmit} width='medium'>
         <FormField label='Email' htmlFor='email' error={form.touched.email && form.errors.email}>
           <TextInput
             name='email'
@@ -59,8 +61,11 @@ function Login({ history }) {
             onChange={form.handleChange}
           />
         </FormField>
-        <Button type='submit' label='Login' primary />
-      </form>
+        <Button type='submit' label='Login' primary margin={{ vertical: 'medium' }} />
+      </Box>
+      <Box margin={{ vertical: 'medium', horizontal: 'small' }} justify='end' direction='row' gap='xsmall'>
+        Not registered? <Link to='/register'>Sign Up</Link>
+      </Box>
     </Box>
   )
 }
