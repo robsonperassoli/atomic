@@ -8,6 +8,7 @@ import Container from '../../components/Container'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import TaskList from './TaskList'
 import TaskModal from './TaskModal'
+import WeekDaysMenu from "./WeekDaysMenu";
 
 const TASKS_QUERY = gql`
   query TasksQuery($projectId: ID!, $createdAtStart: DateTime!, $createdAtEnd: DateTime!) {
@@ -74,32 +75,11 @@ function Home() {
           margin={{ top: 'medium' }}
           onClick={() => setTaskModal({ visible: true, props: {} })}
         />
-        <Box
-          direction='row'
-          fill='horizontal'
-          justify='between'
-          border='all'
-          round='xsmall'
-          margin={{ vertical: 'small' }}
-        >
-          {dates.map((date, i) => (
-            <Box
-              pad='small'
-              border={i !== dates.length - 1 ? 'right' : null}
-              fill
-              align='center'
-              onClick={() => setSelectedDate(date)}
-              background={date.hasSame(selectedDate, 'day') ? 'light-2' : null}
-              round={{
-                size: 'xsmall',
-                corner: 'right'
-              }}
-              key={date.toISO()}
-            >
-              {date.toFormat('EEE')}
-            </Box>
-          ))}
-        </Box>
+        <WeekDaysMenu
+          dates={dates}
+          onDateSelected={date => setSelectedDate(date)}
+          selectedDate={selectedDate}
+        />
         {projectId ? (
           <TaskList
             tasks={data ? data.project.tasks : []}

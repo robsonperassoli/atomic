@@ -2,7 +2,17 @@ import React from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { Box, Text } from 'grommet'
 import formatDuration from 'format-duration'
+import styled from 'styled-components'
 import Task from './Task'
+
+const edgeSize = () => ({ theme}) => theme.global.edgeSize.xsmall
+
+const TotalHoursBox = styled(Box)`
+  border-color: ${({ theme }) => theme.global.colors.border.light};
+  border-width: ${({ theme }) => theme.global.borderSize.xsmall};
+  border-style: solid;
+  border-radius: 0 0 ${edgeSize()} ${edgeSize()};
+`
 
 const STOP_TASK = gql`
   mutation StopTask($taskId: ID!) {
@@ -36,20 +46,22 @@ function TaskList({ tasks, onTaskEdit }) {
 
   const totalTime = tasks.reduce((sum, task) => sum + task.time, 0)
   return (
-    <Box>
-      {tasks.map(task => (
-        <Task
-          key={task.id}
-          task={task}
-          onTaskStart={() => startTask({ variables: { taskId: task.id } })}
-          onTaskStop={() => stopTask({ variables: { taskId: task.id } })}
-          onEditClicked={() => onTaskEdit(task)}
-        />
-      ))}
-      <Box justify='end' direction='row' margin={{ vertical: 'small' }}>
-        <Text weight='bold' color='gray' size='large'>{formatDuration(totalTime * 1000)}</Text>
+    <>
+      <Box border='vertical'>
+        {tasks.map(task => (
+          <Task
+            key={task.id}
+            task={task}
+            onTaskStart={() => startTask({ variables: { taskId: task.id } })}
+            onTaskStop={() => stopTask({ variables: { taskId: task.id } })}
+            onEditClicked={() => onTaskEdit(task)}
+          />
+        ))}
       </Box>
-    </Box>
+      <TotalHoursBox justify='end' direction='row'>
+        <Text margin='small' weight='bold' color='gray' size='large'>{formatDuration(totalTime * 1000)}</Text>
+      </TotalHoursBox>
+    </>
   )
 }
 
