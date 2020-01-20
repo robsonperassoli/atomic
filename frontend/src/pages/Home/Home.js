@@ -5,10 +5,11 @@ import { useQuery, useSubscription, gql } from '@apollo/client'
 import { DateTime } from 'luxon'
 import AppLayout from '../../components/AppLayout'
 import Container from '../../components/Container'
+import WeekSelector from '../../components/WeekSelector'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import TaskList from './TaskList'
 import TaskModal from './TaskModal'
-import WeekDaysMenu from "./WeekDaysMenu";
+import WeekDaysMenu from './WeekDaysMenu'
 
 const TASKS_QUERY = gql`
   query TasksQuery($projectId: ID!, $createdAtStart: DateTime!, $createdAtEnd: DateTime!) {
@@ -42,12 +43,11 @@ function NoProjectSelected() {
   return <Text>No project Selected, select the project to see the tasks</Text>
 }
 
-const weekDates = () => {
-  const weekStart = DateTime.local().startOf('week').startOf('day')
+const weekDates = (date) => {
+  const weekStart = date.startOf('week').startOf('day')
   return new Array(7).fill(1)
     .map((_v, i) => weekStart.plus({ days: i }))
 }
-
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState(DateTime.local().startOf('day'))
@@ -64,17 +64,21 @@ function Home() {
   })
   const { data: _subscription } = useSubscription(TASK_SUBSCRIPTION)
 
-  const dates = weekDates()
+  const dates = weekDates(selectedDate)
   return (
     <AppLayout>
       <Container>
-        <Button
-          icon={<Add />}
-          label='New Task'
-          alignSelf='start'
-          margin={{ top: 'medium' }}
-          onClick={() => setTaskModal({ visible: true, props: {} })}
-        />
+        <Box direction='row' justify='between' align='center' margin={{ top: 'medium' }}>
+          <Button
+            icon={<Add />}
+            label='New Task'
+            onClick={() => setTaskModal({ visible: true, props: {} })}
+          />
+          <WeekSelector
+            date={selectedDate}
+            onDateChanged={date => setSelectedDate(date)}
+          />
+        </Box>
         <WeekDaysMenu
           dates={dates}
           onDateSelected={date => setSelectedDate(date)}
