@@ -47,6 +47,7 @@ defmodule Atomic.MixProject do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:cors_plug, "~> 2.0"},
+      {:gutenex, "~> 0.2.0"}
     ]
   end
 

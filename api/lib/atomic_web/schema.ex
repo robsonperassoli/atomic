@@ -3,6 +3,7 @@ defmodule AtomicWeb.Schema do
 
   alias AtomicWeb.ProjectManagementResolver
   alias AtomicWeb.AccountsResolver
+  alias AtomicWeb.ReportsResolver
 
   import_types Absinthe.Type.Custom
 
@@ -35,6 +36,12 @@ defmodule AtomicWeb.Schema do
 
   object :session do
     field :token, non_null(:string)
+  end
+
+  object :report do
+    field :id, non_null(:id)
+    field :title, non_null(:string)
+    field :url, non_null(:string)
   end
 
   query do
@@ -124,6 +131,13 @@ defmodule AtomicWeb.Schema do
       resolve &AccountsResolver.login/3
     end
 
+    field :request_tasks_report, :boolean do
+      arg :project_id, non_null(:id)
+      arg :start_date, non_null(:datetime)
+      arg :end_date, non_null(:datetime)
+
+      resolve &ReportsResolver.request_tasks_report/3
+    end
   end
 
   subscription do
@@ -138,6 +152,12 @@ defmodule AtomicWeb.Schema do
 
       trigger :stop_task, topic: fn task ->
         "user:#{task.project.user_id}"
+      end
+    end
+
+    field :report_finished, :report do
+      config fn _, %{ context: %{ current_user: current_user }} ->
+        {:ok, topic: "user:#{current_user.id}"}
       end
     end
   end
