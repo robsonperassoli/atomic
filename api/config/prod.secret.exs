@@ -28,6 +28,9 @@ config :atomic, AtomicWeb.Endpoint,
   url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 80],
   secret_key_base: secret_key_base
 
+config :pdf_generator,
+  wkhtml_path: "/app/bin/wkhtmltopdf"
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
