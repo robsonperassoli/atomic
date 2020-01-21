@@ -3,7 +3,7 @@ import { Box, Header, Text, Menu } from 'grommet'
 import { Add, Clock } from 'grommet-icons'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import styled from 'styled-components'
-import useSelectedProjectId from '../hooks/useSelectedProjectId'
+import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import ProjectModal from './ProjectModal'
 
 const LogoText = styled(Text)`

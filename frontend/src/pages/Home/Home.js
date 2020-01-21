@@ -5,11 +5,12 @@ import { useQuery, useSubscription, gql } from '@apollo/client'
 import { DateTime } from 'luxon'
 import AppLayout from '../../components/AppLayout'
 import Container from '../../components/Container'
-import WeekSelector from '../../components/WeekSelector'
+import WeekSelector from '../../components/AppLayout/WeekSelector'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import TaskList from './TaskList'
 import TaskModal from './TaskModal'
 import WeekDaysMenu from './WeekDaysMenu'
+import Report from "./Report";
 
 const TASKS_QUERY = gql`
   query TasksQuery($projectId: ID!, $createdAtStart: DateTime!, $createdAtEnd: DateTime!) {
@@ -69,11 +70,14 @@ function Home() {
     <AppLayout>
       <Container>
         <Box direction='row' justify='between' align='center' margin={{ top: 'medium' }}>
-          <Button
-            icon={<Add />}
-            label='New Task'
-            onClick={() => setTaskModal({ visible: true, props: {} })}
-          />
+          <Box direction='row' gap='10px'>
+            <Button
+              icon={<Add />}
+              label='New Task'
+              onClick={() => setTaskModal({ visible: true, props: {} })}
+            />
+            <Report />
+          </Box>
           <WeekSelector
             date={selectedDate}
             onDateChanged={date => setSelectedDate(date)}
