@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useQuery, useSubscription, gql, useMutation } from '@apollo/client'
 import { Layer, Button, Box, Anchor, Text } from 'grommet'
 import { Print, DocumentDownload, Close } from 'grommet-icons'
-import { DateTime } from 'luxon'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
 import ReportOptionsModal from './ReportOptionsModal'
 

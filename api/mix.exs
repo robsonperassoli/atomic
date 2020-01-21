@@ -20,7 +20,7 @@ defmodule Atomic.MixProject do
   def application do
     [
       mod: {Atomic.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :pdf_generator, :timex]
     ]
   end
 
@@ -36,6 +36,7 @@ defmodule Atomic.MixProject do
       {:phoenix, "~> 1.4.11"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
+      {:phoenix_html, "~> 2.13.3"},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
@@ -47,7 +48,8 @@ defmodule Atomic.MixProject do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:cors_plug, "~> 2.0"},
-      {:gutenex, "~> 0.2.0"}
+      {:pdf_generator, ">= 0.6.0"},
+      {:timex, "~> 3.0"},
     ]
   end
 

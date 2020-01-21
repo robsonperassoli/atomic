@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <title>Tasks Report</title>
+  <style>
+    * { font-family: arial, sans-serif; margin: 0; padding: 0; }
+    #page { /* background-color: #ccc; */ width: 700pt; padding: 2cm; }
+    
+    header { position: relative; }
+    header h1 { font-size: 20px; position: absolute; top: 30%; }
+
+    #tasks { margin-top: 40px; width: 100%; border-collapse: collapse; }
+    #tasks tbody { min-height: 100px; }
+    #tasks thead tr th,
+    #tasks tfoot tr td:not(:first-child) { background-color: #286ee6; color: #f3f3f3; }    
+    #tasks thead tr th,
+    #tasks tfoot tr td { padding: 5px; }
+    #tasks tbody tr td { padding: 15px 5px; }
+    #tasks thead tr th:not(:first-child), #tasks tbody tr td:not(:first-child) { text-align: right; }
+    #tasks thead tr th:first-child { text-align: left; }
+    #tasks tfoot tr td { text-align: right; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div id="page">
+    <header>
+      <h1><%= @project.name %> - Tasks from <%= format_date(@start_date) %>  to <%= format_date(@end_date) %></h1>
+    </header>
+    <table id="tasks">
+      <thead>
+        <tr>
+          <th>TASK</th>
+          <th>HOURS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for task <- @tasks do %>
+          <tr>
+            <td><%= task.description %></td>
+            <td><%= format_time(task.time) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>TOTAL TIME</td>
+          <td><%= format_time(@total_time) %></td>
+        </tr>
+      </tfoot>
+    </table>
+    
+  </div>
+</body>
+</html>
