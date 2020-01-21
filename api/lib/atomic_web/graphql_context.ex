@@ -1,4 +1,4 @@
-defmodule AtomicWeb.Context do
+defmodule AtomicWeb.GraphQLContext do
   @behaviour Plug
 
   import Plug.Conn

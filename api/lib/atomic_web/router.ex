@@ -3,14 +3,17 @@ defmodule AtomicWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug AtomicWeb.ApiContext
   end
 
   pipeline :graphql do
-    plug AtomicWeb.Context
+    plug AtomicWeb.GraphQLContext
   end
 
   scope "/api", AtomicWeb do
     pipe_through :api
+
+    get "/reports/tasks", ReportController, :print
   end
 
   scope "/graphql" do
