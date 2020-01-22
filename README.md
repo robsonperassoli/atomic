@@ -6,3 +6,7 @@ Atomic - time tracking tool
 
 ## Real time updates
 ![Real time updates](/img/atomic-subscription.gif)
+
+## Reports
+![Reports](/img/reports.gif)
+
