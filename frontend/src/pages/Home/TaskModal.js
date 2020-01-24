@@ -29,19 +29,21 @@ const TimeMaskedInput = styled(MaskedInput)`
 
 
 const CREATE_TASK = gql`
-  mutation CreateTaskMutation($projectId:ID!, $description: String!) {
-    createTask(projectId: $projectId, description: $description) {
+  mutation CreateTaskMutation($projectId:ID!, $description: String!, $time: Int) {
+    createTask(projectId: $projectId, description: $description, time: $time) {
       id
       description
+      time
     }
   }
 `
 
 const UPDATE_TASK = gql`
-  mutation UpdateTaskMutation($taskId:ID!, $description: String!) {
-    updateTask(id: $taskId, description: $description) {
+  mutation UpdateTaskMutation($taskId:ID!, $description: String!, $time: Int) {
+    updateTask(id: $taskId, description: $description, time: $time) {
       id
       description
+      time
     }
   }
 `
@@ -92,7 +94,9 @@ function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
     }
   }
 
-  const createVars = ({ description, time }) => ({ projectId, description, time })
+  const createVars = ({ description, time }) => ({
+    variables: { projectId, description, time: formattedDurationToSeconds(time) }
+  })
 
   const projectId = useSelectedProjectId()
   const onSubmit = async (values) => {

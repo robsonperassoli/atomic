@@ -128,6 +128,10 @@ defmodule Atomic.ProjectManagement do
     Project.changeset(project, %{})
   end
 
+  defp get_time(attrs) do
+
+  end
+
   def create_task(attrs \\ %{}, user) do
     %{ project_id: project_id, description: description } = attrs
     _project = get_user_project!(user.id, project_id)
@@ -138,7 +142,7 @@ defmodule Atomic.ProjectManagement do
       description: description,
       timer_status: "running",
       timer_started_at: DateTime.utc_now,
-      time: 0
+      time: attrs["time"] || 0
     })
     |> Repo.insert()
   end

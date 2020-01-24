@@ -82,6 +82,7 @@ defmodule AtomicWeb.Schema do
     field :create_task, :task do
       arg :project_id, non_null(:id)
       arg :description, non_null(:string)
+      arg :time, :integer
 
       middleware AtomicWeb.AuthMiddleware
       resolve &ProjectManagementResolver.create_task/3
@@ -90,6 +91,7 @@ defmodule AtomicWeb.Schema do
     field :update_task, :task do
       arg :id, non_null(:id)
       arg :description, non_null(:string)
+      arg :time, :integer
 
       middleware AtomicWeb.AuthMiddleware
       resolve &ProjectManagementResolver.update_task/3
