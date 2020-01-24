@@ -1,10 +1,32 @@
 import React from 'react'
-import { Layer, Form, TextArea, Button, Box, FormField } from 'grommet'
+import { Layer, Form, TextArea, Button, Box, FormField, MaskedInput } from 'grommet'
 import { Checkmark, Trash } from 'grommet-icons'
 import { gql, useMutation } from '@apollo/client'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import styled from 'styled-components'
+import { Duration } from 'luxon'
 import useSelectedProjectId from '../../hooks/useSelectedProjectId'
+import { formatDuration, timerRunning } from '../../helpers/tasks'
+
+const TimeFormField = styled(FormField)`
+  flex-direction: row;
+  > label {
+    flex-grow: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-weight: 600;
+  }
+`
+
+const TimeMaskedInput = styled(MaskedInput)`
+  width: 100px;
+  &:disabled {
+    opacity: ${({ theme }) => theme.textInput.disabled.opacity
+  }
+`
+
 
 const CREATE_TASK = gql`
   mutation CreateTaskMutation($projectId:ID!, $description: String!) {
@@ -36,15 +58,45 @@ const validationSchema = Yup.object().shape({
     .required('Required')
 })
 
+const createInitialValues = (task) => {
+  if(!task) return { time: '00:00' }
+
+  const { description } = task
+  const time = formatDuration(task.time * 1000)
+  return {
+    description,
+    time
+  }
+}
+
+const formattedDurationToSeconds = (stringDuration) => {
+  const [hours, minutes] = stringDuration.split(':')
+  return Duration.fromObject({ hours, minutes }).as('seconds')
+}
+
 function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
   const [createTask] = useMutation(CREATE_TASK)
   const [updateTask] = useMutation(UPDATE_TASK)
   const [deleteTask] = useMutation(DELETE_TASK)
 
+  const updateVars = (task, formValues) => {
+    const { description, time } = formValues
+    const { id: taskId } = task
+
+    return {
+      variables: {
+        taskId,
+        description,
+        ...(timerRunning(task.timerStatus) ? {} : { time: formattedDurationToSeconds(time) })
+      }
+    }
+  }
+
+  const createVars = ({ description, time }) => ({ projectId, description, time })
+
   const projectId = useSelectedProjectId()
-  const onSubmit = async ({ description }) => {
-    const variables = { variables: { ...(task ? { taskId: task.id } : { projectId } ), description } }
-    task ? await updateTask(variables) : await createTask(variables)
+  const onSubmit = async (values) => {
+    task ? await updateTask(updateVars(task, values)) : await createTask(createVars(values))
     onClose()
     onTaskSaved()
   }
@@ -53,7 +105,7 @@ function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
     onClose()
     onTaskDeleted()
   }
-  const form = useFormik({ initialValues: task || {}, validationSchema, onSubmit })
+  const form = useFormik({ initialValues: createInitialValues(task), validationSchema, onSubmit })
 
   return (
     <Layer
@@ -65,6 +117,26 @@ function TaskModal({ onClose, onTaskSaved, onTaskDeleted, task }) {
           <FormField error={form.touched.description && form.errors.description}>
             <TextArea onChange={form.handleChange} placeholder='Type the task description' rows={4} name='description' value={form.values.description} />
           </FormField>
+
+          <TimeFormField error={form.touched.time && form.errors.time} label='Duration'>
+            <TimeMaskedInput
+              onChange={form.handleChange}
+              placeholder='00:00'
+              name='time'
+              value={form.values.time}
+              disabled={task && timerRunning(task.timerStatus)}
+              mask={[
+                { length: [1,2], regexp: /^[0-9]*$/, placeholder: 'hh' },
+                { fixed: ':' },
+                {
+                  length: 2,
+                  options: ['00', '05', '10', '15', '30', '45'],
+                  regexp: /^[0-5][0-9]$|^[0-9]$/,
+                  placeholder: 'mm',
+                },
+              ]}
+            />
+          </TimeFormField>
 
           <Box justify='between' direction='row'>
             {task && (

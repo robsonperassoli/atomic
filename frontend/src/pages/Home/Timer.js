@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Text } from 'grommet'
-import { DateTime } from 'luxon'
-import formatDuration from 'format-duration'
-
-const secondsToMillis = time => time * 1000
-const timerRunning = timerStatus => timerStatus === 'running'
-const calcElapsedTime = ({ time, timerStartedAt, timerStatus }) =>
-  secondsToMillis(time) + (timerRunning(timerStatus) ? DateTime.utc().diff(DateTime.fromISO(timerStartedAt)) : 0)
+import { elapsedTime as calcElapsedTime, formatDuration } from '../../helpers/tasks'
 
 const Timer = ({ task }) => {
   const [elapsedTime, setElapsedTime] = useState(calcElapsedTime(task))

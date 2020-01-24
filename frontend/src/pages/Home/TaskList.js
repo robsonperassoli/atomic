@@ -1,8 +1,8 @@
 import React from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { Box, Text } from 'grommet'
-import formatDuration from 'format-duration'
 import styled from 'styled-components'
+import { formatDuration } from '../../helpers/tasks'
 import Task from './Task'
 
 const edgeSize = () => ({ theme}) => theme.global.edgeSize.xsmall

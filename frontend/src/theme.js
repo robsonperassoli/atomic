@@ -5,5 +5,10 @@ export default {
       size: '18px',
       height: '20px'
     }
+  },
+  textInput: {
+    disabled: {
+      opacity: 0.5
+    }
   }
 }
