@@ -63,7 +63,7 @@ function Home() {
       createdAtEnd: selectedDate.endOf('day').toUTC()
     }
   })
-  const { data: _subscription } = useSubscription(TASK_SUBSCRIPTION)
+  useSubscription(TASK_SUBSCRIPTION)
 
   const dates = weekDates(selectedDate)
   return (
