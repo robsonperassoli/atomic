@@ -41,7 +41,7 @@ const TASK_SUBSCRIPTION = gql`
 `
 
 function NoProjectSelected() {
-  return <Text>No project Selected, select the project to see the tasks</Text>
+  return <Text margin='medium'>No project selected, select the project to see the tasks.</Text>
 }
 
 const weekDates = (date) => {
@@ -69,31 +69,35 @@ function Home() {
   return (
     <AppLayout>
       <Container>
-        <Box direction='row' justify='between' align='center' margin={{ top: 'medium' }}>
-          <Box direction='row' gap='10px'>
-            <Button
-              icon={<Add />}
-              label='New Task'
-              onClick={() => setTaskModal({ visible: true, props: {} })}
+        {projectId && (
+          <>
+            <Box direction='row' justify='between' align='center' margin={{ top: 'medium' }}>
+              <Box direction='row' gap='10px'>
+                <Button
+                  icon={<Add />}
+                  label='New Task'
+                  onClick={() => setTaskModal({ visible: true, props: {} })}
+                />
+                <Report />
+              </Box>
+              <WeekSelector
+                date={selectedDate}
+                onDateChanged={date => setSelectedDate(date)}
+              />
+            </Box>
+            <WeekDaysMenu
+              dates={dates}
+              onDateSelected={date => setSelectedDate(date)}
+              selectedDate={selectedDate}
             />
-            <Report />
-          </Box>
-          <WeekSelector
-            date={selectedDate}
-            onDateChanged={date => setSelectedDate(date)}
-          />
-        </Box>
-        <WeekDaysMenu
-          dates={dates}
-          onDateSelected={date => setSelectedDate(date)}
-          selectedDate={selectedDate}
-        />
-        {projectId ? (
-          <TaskList
-            tasks={data ? data.project.tasks : []}
-            onTaskEdit={task => setTaskModal({ visible: true, props: { task } })}
-          />
-        ) : (
+            <TaskList
+              tasks={data ? data.project.tasks : []}
+              onTaskEdit={task => setTaskModal({ visible: true, props: { task } })}
+            />
+          </>
+        )}
+
+        {!projectId && (
           <NoProjectSelected />
         )}
       </Container>

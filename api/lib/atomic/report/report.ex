@@ -9,7 +9,6 @@ defmodule Atomic.Report do
     |> Enum.map(fn t -> t.time end)
     |> Enum.sum
 
-
     %{
       project: project,
       tasks: tasks,
