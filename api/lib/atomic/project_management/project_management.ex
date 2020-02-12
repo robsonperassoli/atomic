@@ -128,10 +128,6 @@ defmodule Atomic.ProjectManagement do
     Project.changeset(project, %{})
   end
 
-  defp get_time(attrs) do
-
-  end
-
   def create_task(attrs \\ %{}, user) do
     %{ project_id: project_id, description: description } = attrs
     _project = get_user_project!(user.id, project_id)

@@ -20,7 +20,7 @@ defmodule Atomic.MixProject do
   def application do
     [
       mod: {Atomic.Application, []},
-      extra_applications: [:logger, :runtime_tools, :pdf_generator, :timex]
+      extra_applications: [:logger, :runtime_tools, :pdf_generator, :timex, :gen_stage]
     ]
   end
 
@@ -50,6 +50,7 @@ defmodule Atomic.MixProject do
       {:cors_plug, "~> 2.0"},
       {:pdf_generator, ">= 0.6.0"},
       {:timex, "~> 3.0"},
+      {:gen_stage, "~> 1.0.0"}
     ]
   end
 

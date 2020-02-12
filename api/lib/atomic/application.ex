@@ -14,7 +14,9 @@ defmodule Atomic.Application do
       AtomicWeb.Endpoint,
       # Starts a worker by calling: Atomic.Worker.start_link(arg)
       # {Atomic.Worker, arg},
-      {Absinthe.Subscription, [AtomicWeb.Endpoint]}
+      {Absinthe.Subscription, [AtomicWeb.Endpoint]},
+      {AtomicWeb.EventBus, []},
+      {AtomicWeb.EventConsumer, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

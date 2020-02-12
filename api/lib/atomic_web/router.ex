@@ -13,7 +13,7 @@ defmodule AtomicWeb.Router do
   scope "/api", AtomicWeb do
     pipe_through :api
 
-    get "/reports/tasks", ReportController, :print
+    get "/reports/:id", ReportController, :print
   end
 
   scope "/graphql" do

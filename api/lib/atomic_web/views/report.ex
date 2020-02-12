@@ -6,9 +6,8 @@ defmodule AtomicWeb.ReportView do
     |> Float.round(2)
   end
 
-  def format_date(str_date) do
-    str_date
-    |> Timex.parse!("{ISO:Extended:Z}")
+  def format_date(date) do
+    date
     |> Timex.format!("{M}/{D}/{YYYY}")
   end
 end
