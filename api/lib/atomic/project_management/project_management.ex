@@ -138,7 +138,7 @@ defmodule Atomic.ProjectManagement do
       description: description,
       timer_status: "running",
       timer_started_at: DateTime.utc_now,
-      time: attrs["time"] || 0
+      time: Map.get(attrs, :time) || 0
     })
     |> Repo.insert()
   end
