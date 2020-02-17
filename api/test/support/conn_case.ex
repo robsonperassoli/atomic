@@ -22,6 +22,8 @@ defmodule AtomicWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias AtomicWeb.Router.Helpers, as: Routes
+      import Atomic.Factory
+      import Atomic.TestHelper
 
       # The default endpoint for testing
       @endpoint AtomicWeb.Endpoint
