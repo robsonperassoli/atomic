@@ -12,11 +12,12 @@ jobs:
           POSTGRES_DB: atomic_test
           POSTGRES_PASSWORD:
 
-    working_directory: ~/api
+    working_directory: ~/app
 
     steps:
       - checkout
 
+      - run: cd api/
       - run: mix local.hex --force
       - run: mix local.rebar --force
 
