@@ -1,10 +1,6 @@
 defmodule AtomicWeb.Schema.Query.ProfileTest do
   use AtomicWeb.ConnCase, async: true
 
-  setup do
-    Atomic.Seeds.run()
-  end
-
   @query """
   {
     me {
