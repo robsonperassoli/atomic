@@ -52,7 +52,6 @@ defmodule Atomic.MixProject do
       {:pdf_generator, ">= 0.6.0"},
       {:timex, "~> 3.0"},
       {:gen_stage, "~> 1.0.0"},
-      #{:tzdata, "~> 0.1.8", override: true}
     ]
   end
 

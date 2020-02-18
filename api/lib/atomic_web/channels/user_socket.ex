@@ -5,6 +5,9 @@ defmodule AtomicWeb.UserSocket do
 
   alias AtomicWeb.AuthHelper
 
+  def put_user(socket, user), do:
+    Absinthe.Phoenix.Socket.put_options(socket, context: %{ current_user: user })
+
   ## Channels
   # channel "room:*", AtomicWeb.RoomChannel
 
@@ -20,12 +23,11 @@ defmodule AtomicWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket) do
-    IO.inspect params
     %{"token" => token} = params
-    {:ok, user} = AuthHelper.get_user_by_token(token)
-
-    socket = Absinthe.Phoenix.Socket.put_options(socket, context: %{ current_user: user })
-    {:ok, socket}
+    case AuthHelper.get_user_by_token(token) do
+      {:ok, user} -> {:ok, put_user(socket, user)}
+      {:error, _reason} -> :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

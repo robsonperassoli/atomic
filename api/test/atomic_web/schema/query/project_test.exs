@@ -64,7 +64,7 @@ defmodule AtomicWeb.Schema.Query.ProjectTest do
   }
   """
 
-  test "project returns only his tasks" do
+  test "project returns only its own tasks" do
     {:ok, owner} = create_user()
     {:ok, project_one} = create_project(%{user: owner})
     {:ok, task_one} = create_task(%{user: owner, project: project_one})
