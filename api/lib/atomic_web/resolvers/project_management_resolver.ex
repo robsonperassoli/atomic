@@ -1,5 +1,6 @@
 defmodule AtomicWeb.ProjectManagementResolver do
   alias Atomic.ProjectManagement
+  import AtomicWeb.Resolvers.Helpers
 
   def list_projects(_root, _args, %{context: %{current_user: user}}) do
     projects = ProjectManagement.user_projects(user)
@@ -24,8 +25,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.create_project(args, user) do
       {:ok, project} ->
         {:ok, project}
-      _error ->
-        {:error, "Could not create project"}
+      {:error, changeset} ->
+        create_error("Could not create project", changeset)
     end
   end
 
@@ -33,8 +34,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.update_project(args, user) do
       {:ok, project} ->
         {:ok, project}
-      _error ->
-        {:error, "Could not update project"}
+        {:error, changeset} ->
+          create_error("Could not update project", changeset)
     end
   end
 
@@ -42,8 +43,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.create_task(args, user) do
       {:ok, task} ->
         {:ok, task}
-      _error ->
-        {:error, "Could not create the task"}
+      {:error, changeset} ->
+        create_error("Could not create the task", changeset)
     end
   end
 
@@ -51,8 +52,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.update_task(args, user) do
       {:ok, task} ->
         {:ok, task}
-      _error ->
-        {:error, "Could not update the task"}
+      {:error, changeset} ->
+        create_error("Could not update the task", changeset)
     end
   end
 
@@ -60,8 +61,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.delete_task(id, user) do
       {:ok, _} ->
         {:ok, id}
-      _error ->
-        {:error, "Could not delete the task"}
+      {:error, changeset} ->
+        create_error("Could not delete the task", changeset)
     end
   end
 
@@ -69,8 +70,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.start_task(task_id, user) do
       {:ok, task} ->
         {:ok, task}
-      _error ->
-        {:error, "Error starting the task timer"}
+      {:error, changeset} ->
+        create_error("Error starting the task timer", changeset)
     end
   end
 
@@ -78,8 +79,8 @@ defmodule AtomicWeb.ProjectManagementResolver do
     case ProjectManagement.stop_task(task_id, user) do
       {:ok, task} ->
         {:ok, task}
-      _ ->
-        {:error, "Error stopping the task timer"}
+      {:error, changeset} ->
+        create_error("Error stopping the task timer", changeset)
     end
   end
 end
