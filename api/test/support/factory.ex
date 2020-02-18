@@ -7,9 +7,10 @@ defmodule Atomic.Factory do
   end
 
   def create_user(attrs \\ %{}) do
+    id = uint()
     default_user = %{
-      name: "User #{uint()}",
-      email: "email-#{uint()}@test.com",
+      name: "User #{id}",
+      email: "email-#{id}@test.com",
       password: "secret"
     }
 
@@ -18,7 +19,7 @@ defmodule Atomic.Factory do
     |> Accounts.create_user()
   end
 
-  def create_project(attrs \\ %{}, %User{} = user) do
+  def create_project(%{user: user} = attrs) do
     default_project = %{
       name: "Project #{uint()}"
     }
@@ -26,6 +27,17 @@ defmodule Atomic.Factory do
     attrs
     |> Enum.into(default_project)
     |> ProjectManagement.create_project(user)
+  end
+
+  def create_task(%{user: user, project: project} = attrs) do
+    default_task = %{
+      description: "Task #{uint()}",
+      project_id: project.id
+    }
+
+    attrs
+    |> Enum.into(default_task)
+    |> ProjectManagement.create_task(user)
   end
 
 end
