@@ -156,7 +156,7 @@ defmodule Atomic.ProjectManagement do
   end
 
   defp calculate_elapsed_time(%Task{timer_started_at: timer_started_at, time: time}) do
-    elapsed_seconds = DateTime.diff(DateTime.utc_now, timer_started_at, :seconds)
+    elapsed_seconds = DateTime.diff(DateTime.utc_now, timer_started_at, :second)
     time + elapsed_seconds
   end
 
