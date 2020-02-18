@@ -8,14 +8,16 @@ defmodule AtomicWeb.ProjectManagementResolver do
 
   def list_tasks(%ProjectManagement.Project{id: id}, args, %{context: %{current_user: user}}) do
     %{created_at_start: created_at_start, created_at_end: created_at_end} = args
-    project = ProjectManagement.get_user_project!(user.id, id)
+    project = ProjectManagement.get_user_project(user.id, id)
     tasks = ProjectManagement.get_tasks(project.id, created_at_start, created_at_end)
     {:ok, tasks}
   end
 
   def get_project(_root, %{id: id}, %{context: %{current_user: user}}) do
-    project = ProjectManagement.get_user_project!(user.id, id)
-    {:ok, project}
+    case ProjectManagement.get_user_project(user.id, id) do
+      nil -> {:error, "Project not found"}
+      project -> {:ok, project}
+    end
   end
 
   def create_project(_root, args, %{context: %{current_user: user}}) do

@@ -45,17 +45,17 @@ defmodule AtomicWeb.Schema do
   end
 
   query do
-    field :projects, non_null(list_of(non_null(:project))) do
+    field :projects, list_of(non_null(:project)) do
       middleware AtomicWeb.AuthMiddleware
       resolve &ProjectManagementResolver.list_projects/3
     end
 
-    field :me, non_null(:user) do
+    field :me, :user do
       middleware AtomicWeb.AuthMiddleware
       resolve &AccountsResolver.me/3
     end
 
-    field :project, non_null(:project) do
+    field :project, :project do
       arg :id, non_null(:id)
 
       middleware AtomicWeb.AuthMiddleware

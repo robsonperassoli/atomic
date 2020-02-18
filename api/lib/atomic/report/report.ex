@@ -2,7 +2,7 @@ defmodule Atomic.Report do
   alias Atomic.ProjectManagement
 
   def tasks_by_date(user_id, project_id, start_date, end_date) do
-    project = ProjectManagement.get_user_project!(user_id, project_id)
+    project = ProjectManagement.get_user_project(user_id, project_id)
     tasks = ProjectManagement.get_tasks(project_id, start_date, end_date)
 
     total_time = tasks

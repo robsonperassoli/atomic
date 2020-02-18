@@ -25,4 +25,29 @@ defmodule AtomicWeb.Schema.Query.ProjectTest do
       }
     }
   end
+
+  test "only the owner can query a project" do
+    project_name = "Atomic development"
+    {:ok, owner} = create_user()
+    {:ok, other_user} = create_user()
+    {:ok, project} = create_project(%{name: project_name}, owner)
+
+    conn = build_conn()
+    |> auth_user(other_user)
+    |> get("/graphql", query: @query, variables: %{"id" => project.id})
+
+    assert json_response(conn, 200) === %{
+      "data" => %{
+        "project" => nil},
+        "errors" => [
+          %{
+            "locations" => [
+              %{"column" => 0, "line" => 2}
+            ],
+            "message" => "Project not found",
+            "path" => ["project"]
+          }
+        ]
+    }
+  end
 end

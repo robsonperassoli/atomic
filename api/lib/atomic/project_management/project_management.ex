@@ -45,7 +45,7 @@ defmodule Atomic.ProjectManagement do
   """
   def get_project!(id), do: Repo.get!(Project, id)
 
-  def get_user_project!(user_id, id), do: Repo.get_by!(Project, id: id, user_id: user_id)
+  def get_user_project(user_id, id), do: Repo.get_by(Project, id: id, user_id: user_id)
 
   def get_user_task(task_id, user_id) do
     task = Repo.get!(Task, task_id)
@@ -95,7 +95,7 @@ defmodule Atomic.ProjectManagement do
 
   """
   def update_project(%{:id => id} = attrs, user) do
-    get_user_project!(user.id, id)
+    get_user_project(user.id, id)
     |> Project.changeset(attrs)
     |> Repo.update()
   end
@@ -130,7 +130,7 @@ defmodule Atomic.ProjectManagement do
 
   def create_task(attrs \\ %{}, user) do
     %{ project_id: project_id, description: description } = attrs
-    _project = get_user_project!(user.id, project_id)
+    _project = get_user_project(user.id, project_id)
 
     %Task{}
     |> Task.changeset(%{
