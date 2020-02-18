@@ -1,4 +1,4 @@
-# atomic
+# atomic [![CircleCI](https://circleci.com/gh/robsonperassoli/atomic.svg?style=svg)](https://circleci.com/gh/robsonperassoli/atomic)
 Atomic - time tracking tool
 
 ## User interface
