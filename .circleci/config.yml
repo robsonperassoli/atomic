@@ -17,8 +17,8 @@ jobs:
     steps:
       - checkout
 
-      - run: cd api && mix local.hex --force
-      - run: cd api && mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
 
       - restore_cache:
           keys:
@@ -32,19 +32,19 @@ jobs:
       - run: cd api && mix do deps.get, compile
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: "deps"
+          paths: "api/deps"
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}
-          paths: "deps"
+          paths: "api/deps"
       - save_cache:
           key: v1-mix-cache
-          paths: "deps"
+          paths: "api/deps"
       - save_cache:
           key: v1-build-cache-{{ .Branch }}
-          paths: "_build"
+          paths: "api/_build"
       - save_cache:
           key: v1-build-cache
-          paths: "_build"
+          paths: "api/_build"
 
       - run:
           name: Wait for DB
