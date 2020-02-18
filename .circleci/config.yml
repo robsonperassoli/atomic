@@ -22,7 +22,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "api/mix.lock" }}
             - v1-mix-cache-{{ .Branch }}
             - v1-mix-cache
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
             - v1-build-cache
       - run: cd api && mix do deps.get, compile
       - save_cache:
-          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v1-mix-cache-{{ .Branch }}-{{ checksum "api/mix.lock" }}
           paths: "api/deps"
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}
