@@ -17,6 +17,10 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: Install package dependencies
+          command: sudo apt-get update && sudo apt-get install -f wkhtmltopdf
+
       - run: mix local.hex --force
       - run: mix local.rebar --force
 
