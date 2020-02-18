@@ -1,6 +1,5 @@
 defmodule Atomic.Factory do
   alias Atomic.{Accounts, ProjectManagement}
-  alias Atomic.Accounts.User
 
   def uint do
     System.unique_integer([:positive])
