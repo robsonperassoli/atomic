@@ -1,13 +1,13 @@
 defmodule AtomicWeb.AccountsResolver do
   alias Atomic.Accounts
   alias AtomicWeb.AuthHelper
+  import AtomicWeb.Resolvers.Helpers
 
   def register_user(_root, args, _info) do
     case Accounts.create_user(args) do
       {:ok, user} ->
         {:ok, user}
-      {:error, _reason} ->
-        {:error, "Error registering user"}
+      {:error, changeset} -> create_error(changeset, "Error registering user")
     end
   end
 
