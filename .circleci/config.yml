@@ -17,9 +17,8 @@ jobs:
     steps:
       - checkout
 
-      - run: cd api/
-      - run: mix local.hex --force
-      - run: mix local.rebar --force
+      - run: cd api && mix local.hex --force
+      - run: cd api && mix local.rebar --force
 
       - restore_cache:
           keys:
@@ -30,7 +29,7 @@ jobs:
           keys:
             - v1-build-cache-{{ .Branch }}
             - v1-build-cache
-      - run: mix do deps.get, compile
+      - run: cd api && mix do deps.get, compile
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths: "deps"
@@ -54,4 +53,4 @@ jobs:
       - run: mix test
 
       - store_test_results:
-          path: _build/test/lib/atomic
+          path: api/_build/test/lib/atomic
