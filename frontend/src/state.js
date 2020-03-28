@@ -1,7 +1,16 @@
 import * as storage from './helpers/storage'
+import { isExpired } from './helpers/jwt'
 
-const token = storage.load('token')
+const getToken = () => {
+  const storedToken = storage.load('token')
+  if (!!storedToken && isExpired(storedToken)) {
+    storage.remove('token')
+    return;
+  }
+  return storedToken
+}
 const selectedProjectId = storage.load('selectedProjectId')
+const token = getToken()
 
 export const initialState = { data: { authenticated: !!token, token, selectedProjectId } }
 export default {
