@@ -3,7 +3,7 @@ defmodule AtomicWeb.Endpoint do
   use Absinthe.Phoenix.Endpoint
 
   socket "/socket", AtomicWeb.UserSocket,
-    websocket: [ timeout: 45_000, check_origin: ["http://localhost:3000", "http://localhost:4000", "https://atomic-time.gigalixirapp.com","https://atomic-app.netlify.com"]],
+    websocket: [ timeout: 45_000, check_origin: ["http://localhost:3000", "http://localhost:4000", "https://atomic-time.gigalixirapp.com","https://atomic-app.netlify.com", "https://atomic-app.netlify.app"]],
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
