@@ -30,7 +30,7 @@ config :atomic, AtomicWeb.Endpoint,
   server: true
 
 config :pdf_generator,
-  wkhtml_path: "/app/bin/wkhtmltopdf"
+  wkhtml_path: "/usr/bin/wkhtmltopdf"
 
 # ## Using releases (Elixir v1.9+)
 #
